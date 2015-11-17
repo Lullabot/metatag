@@ -1,0 +1,5 @@
+name: Metatag
+type: module
+description: Adds support and an API to implement meta tags.
+core: 8.x
+package: SEO

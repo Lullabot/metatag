@@ -1,0 +1,7 @@
+# Metatag config menu items definition
+entity.metatag_config.collection:
+  title: 'Metatag config'
+  route_name: entity.metatag_config.collection
+  description: 'List Metatag config'
+  parent: system.admin_structure
+

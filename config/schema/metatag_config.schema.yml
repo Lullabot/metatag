@@ -1,0 +1,24 @@
+metatag.metatag_config.*:
+  type: config_entity
+  label: 'Metatag config config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
+    title:
+      type: string
+      label: 'Page title'
+    description:
+      type: string
+      label: 'Description'
+    abstract:
+      type: string
+      label: 'Abstract'
+    keywords:
+      type: string
+      label: 'Keywords'

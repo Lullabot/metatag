@@ -1,0 +1,42 @@
+
+# MetatagConfig routing definition
+entity.metatag_config.collection:
+  path: '/admin/structure/metatag_config'
+  defaults:
+    _entity_list: 'metatag_config'
+    _title: 'Metatag config'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+entity.metatag_config.add_form:
+  path: '/admin/structure/metatag_config/add'
+  defaults:
+    _entity_form: 'metatag_config.add'
+    _title: 'Add Metatag config'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+entity.metatag_config.edit_form:
+  path: '/admin/structure/metatag_config/{metatag_config}'
+  defaults:
+    _entity_form: 'metatag_config.edit'
+    _title: 'Edit Metatag config'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+entity.metatag_config.delete_form:
+  path: '/admin/structure/metatag_config/{metatag_config}/delete'
+  defaults:
+    _entity_form: 'metatag_config.delete'
+    _title: 'Delete Metatag config'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+

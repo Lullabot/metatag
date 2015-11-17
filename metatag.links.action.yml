@@ -1,0 +1,6 @@
+entity.metatag_config.add_form:
+  route_name: 'entity.metatag_config.add_form'
+  title: 'Add Metatag config'
+  appears_on:
+    - entity.metatag_config.collection
+

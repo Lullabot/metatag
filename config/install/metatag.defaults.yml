@@ -1,0 +1,2 @@
+global:
+  title: '[current-page:title] | [site:name]'

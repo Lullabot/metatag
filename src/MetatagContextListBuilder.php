@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\metatag\MetatagConfigListBuilder.
+ * Contains \Drupal\metatag\MetatagContextListBuilder.
  */
 
 namespace Drupal\metatag;
@@ -11,15 +11,14 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of Metatag config entities.
+ * Provides a listing of Metatag context entities.
  */
-class MetatagConfigListBuilder extends ConfigEntityListBuilder {
+class MetatagContextListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = $this->t('Metatag config');
-    $header['id'] = $this->t('Machine name');
+    $header['label'] = $this->t('Context');
     return $header + parent::buildHeader();
   }
 
@@ -28,7 +27,6 @@ class MetatagConfigListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $this->getLabel($entity);
-    $row['id'] = $entity->id();
     // You probably want a few more properties here...
     return $row + parent::buildRow($entity);
   }

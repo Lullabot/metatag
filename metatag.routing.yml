@@ -1,40 +1,39 @@
-
-# MetatagConfig routing definition
-entity.metatag_config.collection:
-  path: '/admin/structure/metatag_config'
+# MetatagContext routing definition
+entity.metatag_context.collection:
+  path: '/admin/structure/metatag_context'
   defaults:
-    _entity_list: 'metatag_config'
-    _title: 'Metatag config'
+    _entity_list: 'metatag_context'
+    _title: 'Metatag context'
   requirements:
     _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
 
-entity.metatag_config.add_form:
-  path: '/admin/structure/metatag_config/add'
+entity.metatag_context.add_form:
+  path: '/admin/structure/metatag_context/add'
   defaults:
-    _entity_form: 'metatag_config.add'
-    _title: 'Add Metatag config'
+    _entity_form: 'metatag_context.add'
+    _title: 'Add Metatag context'
   requirements:
     _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
 
-entity.metatag_config.edit_form:
-  path: '/admin/structure/metatag_config/{metatag_config}'
+entity.metatag_context.edit_form:
+  path: '/admin/structure/metatag_context/{metatag_context}'
   defaults:
-    _entity_form: 'metatag_config.edit'
-    _title: 'Edit Metatag config'
+    _entity_form: 'metatag_context.edit'
+    _title: 'Edit Metatag context'
   requirements:
     _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
 
-entity.metatag_config.delete_form:
-  path: '/admin/structure/metatag_config/{metatag_config}/delete'
+entity.metatag_context.delete_form:
+  path: '/admin/structure/metatag_context/{metatag_context}/delete'
   defaults:
-    _entity_form: 'metatag_config.delete'
-    _title: 'Delete Metatag config'
+    _entity_form: 'metatag_context.delete'
+    _title: 'Delete Metatag context'
   requirements:
     _permission: 'administer site configuration'
   options:

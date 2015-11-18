@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\metatag\Form\MetatagConfigDeleteForm.
+ * Contains \Drupal\metatag\Form\MetatagContextDeleteForm.
  */
 
 namespace Drupal\metatag\Form;
@@ -12,9 +12,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Builds the form to delete Metatag config entities.
+ * Builds the form to delete Metatag context entities.
  */
-class MetatagConfigDeleteForm extends EntityConfirmFormBase {
+class MetatagContextDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
@@ -26,7 +26,7 @@ class MetatagConfigDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.metatag_config.collection');
+    return new Url('entity.metatag_context.collection');
   }
 
   /**

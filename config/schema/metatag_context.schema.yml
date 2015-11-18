@@ -1,13 +1,13 @@
-metatag.metatag_config.*:
+metatag.metatag_context.*:
   type: config_entity
-  label: 'Metatag config config'
+  label: 'Metatag'
   mapping:
     id:
       type: string
       label: 'ID'
     label:
       type: label
-      label: 'Label'
+      label: 'Type'
     uuid:
       type: string
     title:

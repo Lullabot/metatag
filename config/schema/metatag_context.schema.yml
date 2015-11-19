@@ -1,0 +1,32 @@
+metatag.metatag_context.*:
+  type: config_entity
+  label: 'Metatag'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Type'
+    uuid:
+      type: string
+    title:
+      type: string
+      label: 'Page title'
+    description:
+      type: string
+      label: 'Description'
+    abstract:
+      type: string
+      label: 'Abstract'
+    keywords:
+      type: string
+      label: 'Keywords'
+
+metatag.global:
+  type: config_object
+  label: 'Title of the global context'
+  mapping:
+    title:
+      type: string
+      label: 'The title of the page'

@@ -1,0 +1,31 @@
+# MetatagContext routing definition
+entity.metatag_context.collection:
+  path: '/admin/structure/metatag_context'
+  defaults:
+    _entity_list: 'metatag_context'
+    _title: 'Metatag context'
+  requirements:
+    _permission: 'administer metatags'
+  options:
+    _admin_route: TRUE
+
+entity.metatag_context.edit_form:
+  path: '/admin/structure/metatag_context/{metatag_context}'
+  defaults:
+    _entity_form: 'metatag_context.edit'
+    _title: 'Edit Metatag context'
+  requirements:
+    _permission: 'administer metatags'
+  options:
+    _admin_route: TRUE
+
+entity.metatag_context.delete_form:
+  path: '/admin/structure/metatag_context/{metatag_context}/delete'
+  defaults:
+    _entity_form: 'metatag_context.delete'
+    _title: 'Delete Metatag context'
+  requirements:
+    _permission: 'administer metatags'
+  options:
+    _admin_route: TRUE
+

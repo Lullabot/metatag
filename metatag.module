@@ -1,0 +1,55 @@
+<?php
+/**
+ * Hook implementations for metatag module.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Load all meta tags for this page.
+ */
+function metatag_page_attachments(array &$attachments) {
+  $metatag = entity_load('metatag_context', 'global');
+
+  if (!empty($metatag)) {
+    $metatags = array(
+      'description' => array(
+        '#tag' => 'meta',
+        '#attributes' => array(
+          'name' => 'description',
+          'content' => $metatag->get('description'),
+        ),
+      ),
+      'abstract' => array(
+        '#tag' => 'meta',
+        '#attributes' => array(
+          'name' => 'abstract',
+          'content' => $metatag->get('abstract'),
+        ),
+      ),
+      'keywords' => array(
+        '#tag' => 'meta',
+        '#attributes' => array(
+          'name' => 'keywords',
+          'content' => $metatag->get('keywords'),
+        ),
+      ),
+    );
+    foreach ($metatags as $key => $value) {
+      $attachments['#attached']['html_head'][] = [$value, $key];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function metatag_preprocess_html(array &$variables) {
+  // Alter the page title.
+  $metatag = entity_load('metatag_context', 'global');
+  if (!empty($metatag)) {
+    if (!empty($metatag->get('title'))) {
+      $variables['head_title'] = array('metatag' => $metatag->get('title'));
+    }
+  }
+}

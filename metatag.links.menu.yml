@@ -1,0 +1,7 @@
+# Metatag context menu items definition
+entity.metatag_context.collection:
+  title: 'Metatag context'
+  route_name: entity.metatag_context.collection
+  description: 'List Metatag context'
+  parent: system.admin_structure
+

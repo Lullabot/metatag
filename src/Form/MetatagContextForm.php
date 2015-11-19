@@ -81,13 +81,4 @@ class MetatagContextForm extends EntityForm {
     $form_state->setRedirectUrl($metatag_context->urlInfo('collection'));
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  /*protected function actions(array $form, FormStateInterface $form_state) {
-    parent::actions($form, $form_state);
-    unset($actions['delete']);
-    return $actions;
-  }*/
-
 }

@@ -5,17 +5,7 @@ entity.metatag_context.collection:
     _entity_list: 'metatag_context'
     _title: 'Metatag context'
   requirements:
-    _permission: 'administer site configuration'
-  options:
-    _admin_route: TRUE
-
-entity.metatag_context.add_form:
-  path: '/admin/structure/metatag_context/add'
-  defaults:
-    _entity_form: 'metatag_context.add'
-    _title: 'Add Metatag context'
-  requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer metatags'
   options:
     _admin_route: TRUE
 
@@ -25,7 +15,7 @@ entity.metatag_context.edit_form:
     _entity_form: 'metatag_context.edit'
     _title: 'Edit Metatag context'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer metatags'
   options:
     _admin_route: TRUE
 
@@ -35,7 +25,7 @@ entity.metatag_context.delete_form:
     _entity_form: 'metatag_context.delete'
     _title: 'Delete Metatag context'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer metatags'
   options:
     _admin_route: TRUE
 

@@ -10,10 +10,10 @@ use Drupal\metatag\Entity\MetatagContext;
  */
 function metatag_install() {
   // Create the global metatag.
-  $metatag_defaults = \Drupal::config('metatag.defaults');
+  $metatag_defaults = \Drupal::config('metatag.global');
   $entity = MetatagContext::create(array(
     'id' => 'global',
     'label' => 'Global',
-    'title' => $metatag_defaults->get('global.title'),
+    'title' => $metatag_defaults->get('title'),
   ))->save();
 }

@@ -22,3 +22,11 @@ metatag.metatag_context.*:
     keywords:
       type: string
       label: 'Keywords'
+
+metatag.global:
+  type: config_object
+  label: 'Title of the global context'
+  mapping:
+    title:
+      type: string
+      label: 'The title of the page'

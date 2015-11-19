@@ -1,0 +1,4 @@
+administer metatags:
+  title: 'Administer metatags'
+  description: 'Administer metatags.'
+  restrict access: TRUE

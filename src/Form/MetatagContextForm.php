@@ -26,6 +26,21 @@ class MetatagContextForm extends EntityForm {
 
     $metatag_context = $this->entity;
 
+    // Add the token list to the top of the fieldset.
+    $form['tokens'] = array(
+      '#theme' => 'token_tree',
+      '#token_types' => array(),
+      '#global_types' => TRUE,
+      '#click_insert' => TRUE,
+      '#show_restricted' => FALSE,
+      '#recursion_limit' => 3,
+      '#dialog' => TRUE,
+    );
+
+    $form['intro_text'] = array(
+      '#markup' => '<p>' . t('Configure the meta tags below. Use tokens (see the "Browse available tokens" popup) to avoid redundant meta data and search engine penalization. For example, a \'keyword\' value of "example" will be shown on all content using this configuration, whereas using the [node:field_keywords] automatically inserts the "keywords" values from the current entity (node, term, etc).') . '</p>',
+    );
+
     $form['title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Page title'),

@@ -9,32 +9,40 @@
  * Load all meta tags for this page.
  */
 function metatag_page_attachments(array &$attachments) {
-  $metatag = entity_load('metatag_context', 'global');
+  $metatags = array();
+  $metatag_context = entity_load('metatag_context', 'global');
 
-  if (!empty($metatag)) {
-    $metatags = array(
-      'description' => array(
+  if (!empty($metatag_context)) {
+    if (!empty($metatag_context->get('description'))) {
+      $metatags['description'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'description',
-          'content' => $metatag->get('description'),
+          'content' => \Drupal::token()->replace($metatag_context->get('description')),
         ),
-      ),
-      'abstract' => array(
+      );
+    }
+    if (!empty($metatag_context->get('abstract'))) {
+      $metatags['abstract'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'abstract',
-          'content' => $metatag->get('abstract'),
+          'content' => \Drupal::token()->replace($metatag_context->get('abstract')),
         ),
-      ),
-      'keywords' => array(
+      );
+    }
+    if (!empty($metatag_context->get('keywords'))) {
+      $metatags['keywords'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'keywords',
-          'content' => $metatag->get('keywords'),
+          'content' => \Drupal::token()->replace($metatag_context->get('keywords')),
         ),
-      ),
-    );
+      );
+    }
+  }
+
+  if (!empty($metatags)) {
     foreach ($metatags as $key => $value) {
       $attachments['#attached']['html_head'][] = [$value, $key];
     }
@@ -46,10 +54,12 @@ function metatag_page_attachments(array &$attachments) {
  */
 function metatag_preprocess_html(array &$variables) {
   // Alter the page title.
-  $metatag = entity_load('metatag_context', 'global');
-  if (!empty($metatag)) {
-    if (!empty($metatag->get('title'))) {
-      $variables['head_title'] = array('metatag' => $metatag->get('title'));
+  $metatag_global = entity_load('metatag_context', 'global');
+  if (!empty($metatag_global)) {
+    $title = $metatag_global->get('title');
+    if (!empty($title)) {
+      $processed_title = \Drupal::token()->replace($title);
+      $variables['head_title'] = array('metatag' => $processed_title);
     }
   }
 }

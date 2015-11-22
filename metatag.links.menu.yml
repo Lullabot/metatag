@@ -4,11 +4,3 @@ entity.metatag_context.collection:
   route_name: entity.metatag_context.collection
   description: 'List Metatag context'
   parent: system.admin_structure
-
-# Metatag tag menu items definition
-entity.metatag_tag.collection:
-  title: 'Metatag tag'
-  route_name: entity.metatag_tag.collection
-  description: 'List Metatag tag'
-  parent: system.admin_structure
-

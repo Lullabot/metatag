@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\metatag\MetatagContextListBuilder.
+ * Contains \Drupal\metatag\MetatagDefaultsListBuilder.
  */
 
 namespace Drupal\metatag;
@@ -11,14 +11,14 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of Metatag context entities.
+ * Provides a listing of Metatag defaults entities.
  */
-class MetatagContextListBuilder extends ConfigEntityListBuilder {
+class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = $this->t('Context');
+    $header['label'] = $this->t('Type');
     return $header + parent::buildHeader();
   }
 

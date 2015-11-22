@@ -10,6 +10,7 @@ namespace Drupal\metatag\Form;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\metatag\Entity\MetatagTag;
 
 /**
  * Class MetatagContextForm.
@@ -41,35 +42,17 @@ class MetatagContextForm extends EntityForm {
       '#markup' => '<p>' . t('Configure the meta tags below. Use tokens (see the "Browse available tokens" popup) to avoid redundant meta data and search engine penalization. For example, a \'keyword\' value of "example" will be shown on all content using this configuration, whereas using the [node:field_keywords] automatically inserts the "keywords" values from the current entity (node, term, etc).') . '</p>',
     );
 
-    $form['title'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Page title'),
-      '#maxlength' => 255,
-      '#default_value' => $metatag_context->get('title'),
-      '#description' => $this->t("The text to display in the title bar of a visitor's web browser when they view this page. This meta tag may also be used as the title of the page when a visitor bookmarks or favorites this page."),
-    );
-
-    $form['description'] = array(
-      '#type' => 'textarea',
-      '#title' => $this->t('Description'),
-      '#default_value' => $metatag_context->get('description'),
-      '#description' => $this->t("A brief and concise summary of the page's content, preferably 150 characters or less. The description meta tag may be used by search engines to display a snippet about the page in search results."),
-    );
-
-    $form['abstract'] = array(
-      '#type' => 'textarea',
-      '#title' => $this->t('Abstract'),
-      '#default_value' => $metatag_context->get('abstract'),
-      '#description' => $this->t("A brief and concise summary of the page's content, preferably 150 characters or less. The abstract meta tag may be used by search engines for archiving purposes."),
-    );
-
-    $form['keywords'] = array(
-      '#type' => 'textfield',
-      '#maxlength' => 255,
-      '#title' => $this->t('Keywords'),
-      '#default_value' => $metatag_context->get('keywords'),
-      '#description' => $this->t("A comma-separated list of keywords about the page. This meta tag is not supported by most search engines anymore."),
-    );
+    // Load all tag plugins and render their form representation.
+    $tag_manager = \Drupal::service('plugin.manager.metatag.tag');
+    $tags = $tag_manager->getDefinitions();
+    foreach ($tags as $tag_id => $tag_definition) {
+      $tag = $tag_manager->createInstance($tag_id);
+      // If the context has a value for this tag, set it.
+      if ($metatag_context->hasTag($tag_id)) {
+        $tag->setValue($metatag_context->getTag($tag_id));
+      }
+      $form[$tag_id] = $tag->form();
+    }
 
     return $form;
   }
@@ -79,6 +62,17 @@ class MetatagContextForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $metatag_context = $this->entity;
+
+    // Set tags within the Metatag entity.
+    $tag_manager = \Drupal::service('plugin.manager.metatag.tag');
+    $tags = $tag_manager->getDefinitions();
+    $tag_values = array();
+    foreach ($tags as $tag_id => $tag_definition) {
+      if ($form_state->hasValue($tag_id)) {
+        $tag_values[$tag_id] = $form_state->getValue($tag_id);
+      }
+    }
+    $metatag_context->set('tags', $tag_values);
     $status = $metatag_context->save();
 
     switch ($status) {

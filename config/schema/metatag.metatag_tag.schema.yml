@@ -1,0 +1,19 @@
+metatag.metatag_tag.*:
+  type: string
+  label: 'Metatag tag config'
+
+metatag.metatag_tag.title:
+  type: string
+  label: 'Title'
+
+metatag.metatag_tag.description:
+  type: string
+  label: 'Description'
+
+metatag.metatag_tag.abstract:
+  type: string
+  label: 'Abstract'
+
+metatag.metatag_tag.keywords:
+  type: string
+  label: 'Keywords'

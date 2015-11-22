@@ -29,3 +29,45 @@ entity.metatag_context.delete_form:
   options:
     _admin_route: TRUE
 
+
+# MetatagTag routing definition
+entity.metatag_tag.collection:
+  path: '/admin/structure/metatag_tag'
+  defaults:
+    _entity_list: 'metatag_tag'
+    _title: 'Metatag tag'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+entity.metatag_tag.add_form:
+  path: '/admin/structure/metatag_tag/add'
+  defaults:
+    _entity_form: 'metatag_tag.add'
+    _title: 'Add Metatag tag'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+entity.metatag_tag.edit_form:
+  path: '/admin/structure/metatag_tag/{metatag_tag}'
+  defaults:
+    _entity_form: 'metatag_tag.edit'
+    _title: 'Edit Metatag tag'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+entity.metatag_tag.delete_form:
+  path: '/admin/structure/metatag_tag/{metatag_tag}/delete'
+  defaults:
+    _entity_form: 'metatag_tag.delete'
+    _title: 'Delete Metatag tag'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+

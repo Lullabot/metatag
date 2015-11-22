@@ -29,7 +29,6 @@ use Drupal\metatag\MetatagContextInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/metatag_context/{metatag_context}",
@@ -55,31 +54,36 @@ class MetatagContext extends ConfigEntityBase implements MetatagContextInterface
   protected $label;
 
   /**
-   * The Metatag context title.
+   * The list of tag values for this context.
    *
-   * @var string
+   * @var array
    */
-  protected $title;
+  protected $tags = [];
 
   /**
-   * The Metatag context description.
+   * Returns TRUE if a tag exists.
    *
-   * @var string
+   * @param string $tag_id
+   *   The identifier of the tag.
+   * @return boolean
+   *   TRUE if the tag exists.
    */
-  protected $description;
+  public function hasTag($tag_id) {
+    return array_key_exists($tag_id, $this->tags);
+  }
 
   /**
-   * The Metatag context abstract.
+   * Returns the value of a tag.
    *
-   * @var string
+   * @param string $tag_id
+   *   The identifier of the tag.
+   * @return array|NULL
+   *   array containing the tag values or NULL if not found.
    */
-  protected $abstract;
-
-  /**
-   * The Metatag context keywords.
-   *
-   * @var string
-   */
-  protected $keywords;
-
+  public function getTag($tag_id) {
+    if (!$this->hasTag($tag_id)) {
+      return NULL;
+    }
+    return $this->tags[$tag_id];
+  }
 }

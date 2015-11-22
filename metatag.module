@@ -13,30 +13,30 @@ function metatag_page_attachments(array &$attachments) {
   $metatag_context = entity_load('metatag_context', 'global');
 
   if (!empty($metatag_context)) {
-    if (!empty($metatag_context->get('description'))) {
+    if ($metatag_context->hasTag('description')) {
       $metatags['description'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'description',
-          'content' => \Drupal::token()->replace($metatag_context->get('description')),
+          'content' => \Drupal::token()->replace($metatag_context->getTag('description')),
         ),
       );
     }
-    if (!empty($metatag_context->get('abstract'))) {
+    if ($metatag_context->hasTag('abstract')) {
       $metatags['abstract'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'abstract',
-          'content' => \Drupal::token()->replace($metatag_context->get('abstract')),
+          'content' => \Drupal::token()->replace($metatag_context->getTag('abstract')),
         ),
       );
     }
-    if (!empty($metatag_context->get('keywords'))) {
+    if ($metatag_context->hasTag('keywords')) {
       $metatags['keywords'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'keywords',
-          'content' => \Drupal::token()->replace($metatag_context->get('keywords')),
+          'content' => \Drupal::token()->replace($metatag_context->getTag('keywords')),
         ),
       );
     }
@@ -56,9 +56,8 @@ function metatag_preprocess_html(array &$variables) {
   // Alter the page title.
   $metatag_global = entity_load('metatag_context', 'global');
   if (!empty($metatag_global)) {
-    $title = $metatag_global->get('title');
-    if (!empty($title)) {
-      $processed_title = \Drupal::token()->replace($title);
+    if ($metatag_global->hasTag('title')) {
+      $processed_title = \Drupal::token()->replace($metatag_global->getTag('title'));
       $variables['head_title'] = array('metatag' => $processed_title);
     }
   }

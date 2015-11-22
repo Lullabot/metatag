@@ -2,59 +2,58 @@
 
 /**
  * @file
- * Contains \Drupal\metatag\Entity\MetatagContext.
+ * Contains \Drupal\metatag\Entity\MetatagDefaults.
  */
 
 namespace Drupal\metatag\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\metatag\MetatagContextInterface;
+use Drupal\metatag\MetatagDefaultsInterface;
 
 /**
- * Defines the Metatag context entity.
+ * Defines the Metatag defaults entity.
  *
  * @ConfigEntityType(
- *   id = "metatag_context",
- *   label = @Translation("Metatag context"),
+ *   id = "metatag_defaults",
+ *   label = @Translation("Metatag defaults"),
  *   handlers = {
- *     "list_builder" = "Drupal\metatag\MetatagContextListBuilder",
+ *     "list_builder" = "Drupal\metatag\MetatagDefaultsListBuilder",
  *     "form" = {
- *       "add" = "Drupal\metatag\Form\MetatagContextForm",
- *       "edit" = "Drupal\metatag\Form\MetatagContextForm",
- *       "delete" = "Drupal\metatag\Form\MetatagContextDeleteForm"
+ *       "add" = "Drupal\metatag\Form\MetatagDefaultsForm",
+ *       "edit" = "Drupal\metatag\Form\MetatagDefaultsForm",
  *     }
  *   },
- *   config_prefix = "metatag_context",
+ *   config_prefix = "metatag_defaults",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/metatag_context/{metatag_context}",
- *     "edit-form" = "/admin/structure/metatag_context/{metatag_context}/edit",
- *     "delete-form" = "/admin/structure/metatag_context/{metatag_context}/delete",
+ *     "canonical" = "/admin/structure/metatag_defaults/{metatag_defaults}",
+ *     "edit-form" = "/admin/structure/metatag_defaults/{metatag_defaults}/edit",
+ *     "delete-form" = "/admin/structure/metatag_defaults/{metatag_defaults}/delete",
  *     "collection" = "/admin/structure/visibility_group"
  *   }
  * )
  */
-class MetatagContext extends ConfigEntityBase implements MetatagContextInterface {
+class MetatagDefaults extends ConfigEntityBase implements MetatagDefaultsInterface {
   /**
-   * The Metatag context ID.
+   * The Metatag defaults ID.
    *
    * @var string
    */
   protected $id;
 
   /**
-   * The Metatag context label.
+   * The Metatag defaults label.
    *
    * @var string
    */
   protected $label;
 
   /**
-   * The list of tag values for this context.
+   * The default tag values.
    *
    * @var array
    */

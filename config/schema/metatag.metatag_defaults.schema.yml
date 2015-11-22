@@ -1,6 +1,6 @@
-metatag.metatag_context.*:
+metatag.metatag_defaults.*:
   type: config_entity
-  label: 'Metatag'
+  label: 'Metatag defaults'
   mapping:
     id:
       type: string

@@ -10,33 +10,33 @@
  */
 function metatag_page_attachments(array &$attachments) {
   $metatags = array();
-  $metatag_context = entity_load('metatag_context', 'global');
+  $metatag_defaults = entity_load('metatag_defaults', 'global');
 
-  if (!empty($metatag_context)) {
-    if ($metatag_context->hasTag('description')) {
+  if (!empty($metatag_defaults)) {
+    if ($metatag_defaults->hasTag('description')) {
       $metatags['description'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'description',
-          'content' => \Drupal::token()->replace($metatag_context->getTag('description')),
+          'content' => \Drupal::token()->replace($metatag_defaults->getTag('description')),
         ),
       );
     }
-    if ($metatag_context->hasTag('abstract')) {
+    if ($metatag_defaults->hasTag('abstract')) {
       $metatags['abstract'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'abstract',
-          'content' => \Drupal::token()->replace($metatag_context->getTag('abstract')),
+          'content' => \Drupal::token()->replace($metatag_defaults->getTag('abstract')),
         ),
       );
     }
-    if ($metatag_context->hasTag('keywords')) {
+    if ($metatag_defaults->hasTag('keywords')) {
       $metatags['keywords'] = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => 'keywords',
-          'content' => \Drupal::token()->replace($metatag_context->getTag('keywords')),
+          'content' => \Drupal::token()->replace($metatag_defaults->getTag('keywords')),
         ),
       );
     }
@@ -54,7 +54,7 @@ function metatag_page_attachments(array &$attachments) {
  */
 function metatag_preprocess_html(array &$variables) {
   // Alter the page title.
-  $metatag_global = entity_load('metatag_context', 'global');
+  $metatag_global = entity_load('metatag_defaults', 'global');
   if (!empty($metatag_global)) {
     if ($metatag_global->hasTag('title')) {
       $processed_title = \Drupal::token()->replace($metatag_global->getTag('title'));

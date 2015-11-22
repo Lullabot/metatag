@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\metatag\Form\MetatagContextForm.
+ * Contains \Drupal\metatag\Form\MetatagDefaultsForm.
  */
 
 namespace Drupal\metatag\Form;
@@ -13,11 +13,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\metatag\Entity\MetatagTag;
 
 /**
- * Class MetatagContextForm.
+ * Class MetatagDefaultsForm.
  *
  * @package Drupal\metatag\Form
  */
-class MetatagContextForm extends EntityForm {
+class MetatagDefaultsForm extends EntityForm {
 
   /**
    * {@inheritdoc}
@@ -25,7 +25,7 @@ class MetatagContextForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    $metatag_context = $this->entity;
+    $metatag_defaults = $this->entity;
 
     // Add the token list to the top of the fieldset.
     $form['tokens'] = array(
@@ -47,9 +47,9 @@ class MetatagContextForm extends EntityForm {
     $tags = $tag_manager->getDefinitions();
     foreach ($tags as $tag_id => $tag_definition) {
       $tag = $tag_manager->createInstance($tag_id);
-      // If the context has a value for this tag, set it.
-      if ($metatag_context->hasTag($tag_id)) {
-        $tag->setValue($metatag_context->getTag($tag_id));
+      // If the config_entity has a value for this tag, set it.
+      if ($metatag_defaults->hasTag($tag_id)) {
+        $tag->setValue($metatag_defaults->getTag($tag_id));
       }
       $form[$tag_id] = $tag->form();
     }
@@ -61,7 +61,7 @@ class MetatagContextForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $metatag_context = $this->entity;
+    $metatag_defaults = $this->entity;
 
     // Set tags within the Metatag entity.
     $tag_manager = \Drupal::service('plugin.manager.metatag.tag');
@@ -72,22 +72,13 @@ class MetatagContextForm extends EntityForm {
         $tag_values[$tag_id] = $form_state->getValue($tag_id);
       }
     }
-    $metatag_context->set('tags', $tag_values);
-    $status = $metatag_context->save();
+    $metatag_defaults->set('tags', $tag_values);
+    $status = $metatag_defaults->save();
 
-    switch ($status) {
-      case SAVED_NEW:
-        drupal_set_message($this->t('Created the %label Metatag context.', [
-          '%label' => $metatag_context->label(),
-        ]));
-        break;
-
-      default:
-        drupal_set_message($this->t('Saved the %label Metatag context.', [
-          '%label' => $metatag_context->label(),
-        ]));
-    }
-    $form_state->setRedirectUrl($metatag_context->urlInfo('collection'));
+    drupal_set_message($this->t('Saved the %label Metatag defaults.', [
+      '%label' => $metatag_defaults->label(),
+    ]));
+    $form_state->setRedirectUrl($metatag_defaults->urlInfo('collection'));
   }
 
 }

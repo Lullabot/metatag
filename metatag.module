@@ -13,38 +13,21 @@ function metatag_page_attachments(array &$attachments) {
   $metatag_defaults = entity_load('metatag_defaults', 'global');
 
   if (!empty($metatag_defaults)) {
-    if ($metatag_defaults->hasTag('description')) {
-      $metatags['description'] = array(
-        '#tag' => 'meta',
-        '#attributes' => array(
-          'name' => 'description',
-          'content' => \Drupal::token()->replace($metatag_defaults->getTag('description')),
-        ),
-      );
-    }
-    if ($metatag_defaults->hasTag('abstract')) {
-      $metatags['abstract'] = array(
-        '#tag' => 'meta',
-        '#attributes' => array(
-          'name' => 'abstract',
-          'content' => \Drupal::token()->replace($metatag_defaults->getTag('abstract')),
-        ),
-      );
-    }
-    if ($metatag_defaults->hasTag('keywords')) {
-      $metatags['keywords'] = array(
-        '#tag' => 'meta',
-        '#attributes' => array(
-          'name' => 'keywords',
-          'content' => \Drupal::token()->replace($metatag_defaults->getTag('keywords')),
-        ),
-      );
-    }
-  }
+    // Load all tag plugins.
+    $tag_manager = \Drupal::service('plugin.manager.metatag.tag');
+    $tags = $tag_manager->getDefinitions();
+    // Remove the title tag as it is processed at metatag_preprocess_html().
+    unset($tags['title']);
 
-  if (!empty($metatags)) {
-    foreach ($metatags as $key => $value) {
-      $attachments['#attached']['html_head'][] = [$value, $key];
+    // Loop plugins and render them.
+    foreach ($tags as $tag_id => $tag_definition) {
+      $tag = $tag_manager->createInstance($tag_id);
+      // If the config_entity has a value for this tag, set it.
+      if ($metatag_defaults->hasTag($tag_id)) {
+        $tag->setValue($metatag_defaults->getTag($tag_id));
+        $metatags[$tag_id] = $tag->render();
+        $attachments['#attached']['html_head'][] = [$tag->render(), $tag_id];
+      }
     }
   }
 }

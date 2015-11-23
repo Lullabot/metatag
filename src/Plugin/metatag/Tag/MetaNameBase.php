@@ -81,14 +81,6 @@ abstract class MetaNameBase extends PluginBase {
   }
 
   /**
-   * @return bool
-   *   Whether this meta tag has been enabled.
-   */
-  public function isActive() {
-    return TRUE;
-  }
-
-  /**
    * Generate a form element for this meta tag.
    */
   public function form() {
@@ -113,17 +105,24 @@ abstract class MetaNameBase extends PluginBase {
     $this->value = $value;
   }
 
-  public function output() {
+  /**
+   * Renders this tag.
+   *
+   * @return
+   *   The HTML that represents this tag.
+   */
+  public function render() {
     if (empty($this->value)) {
       // If there is no value, we don't want a tag output.
       $element = '';
     }
     else {
+      $processed_value = \Drupal::token()->replace($this->value);
       $element = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => $this->name,
-          'content' => $this->value(),
+          'content' => $processed_value,
         )
       );
     }

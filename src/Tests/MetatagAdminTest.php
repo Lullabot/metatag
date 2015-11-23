@@ -69,6 +69,17 @@ class MetatagAdminTest extends WebTestBase {
       $processed_value = \Drupal::token()->replace($value);
       $this->assertRaw($processed_value, t('Processed token for metatag @tag was found in the HEAD section of the page.', array('@tag' => $metatag)));
     }
+
+    // Test Robots plugin.
+    $robots_values = array('index', 'follow', 'noydir');
+    $form_values = array();
+    foreach ($robots_values as $value) {
+      $values['robots[' . $value . ']'] = TRUE;
+    }
+    $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
+    $this->assertText('Saved the Global Metatag defaults.');
+    $robots_value = implode(', ', $robots_values);
+    $this->assertRaw($robots_value, t('Robots metatag has the expected values.'));
   }
 
 }

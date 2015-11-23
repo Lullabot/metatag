@@ -97,10 +97,22 @@ abstract class MetaNameBase extends PluginBase {
     return $form;
   }
 
-  protected function value() {
+  /**
+   * Returns the value for this tag.
+   *
+   * @return
+   *   string the value of this tag.
+   */
+  public function value() {
     return $this->value;
   }
 
+  /**
+   * Sets the value of this tag.
+   *
+   * @param string $value
+   *   The value to set to this tag.
+   */
   public function setValue($value) {
     $this->value = $value;
   }

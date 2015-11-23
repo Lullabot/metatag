@@ -57,6 +57,18 @@ class MetatagAdminTest extends WebTestBase {
     foreach ($values as $metatag => $value) {
       $this->assertRaw($value, t('Updated metatag @tag was found in the HEAD section of the page.', array('@tag' => $metatag)));
     }
+
+    // Check that tokens are being replaced in the title and in the rest of the fields.
+    $values = array(
+      'title' => '[current-page:title] | [site:name] | Test title',
+      'description' => '[current-page:title] | [site:name] | Test description',
+    );
+    $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
+    $this->assertText('Saved the Global Metatag defaults.');
+    foreach ($values as $metatag => $value) {
+      $processed_value = \Drupal::token()->replace($value);
+      $this->assertRaw($processed_value, t('Processed token for metatag @tag was found in the HEAD section of the page.', array('@tag' => $metatag)));
+    }
   }
 
 }

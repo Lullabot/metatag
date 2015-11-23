@@ -69,7 +69,13 @@ class MetatagDefaultsForm extends EntityForm {
     $tag_values = array();
     foreach ($tags as $tag_id => $tag_definition) {
       if ($form_state->hasValue($tag_id)) {
-        $tag_values[$tag_id] = $form_state->getValue($tag_id);
+        // Some plugins need to process form input before storing it.
+        // Hence, we set it and then get it.
+        $tag = $tag_manager->createInstance($tag_id);
+        $tag->setValue($form_state->getValue($tag_id));
+        if (!empty($tag->value())) {
+          $tag_values[$tag_id] = $tag->value();
+        }
       }
     }
     $metatag_defaults->set('tags', $tag_values);

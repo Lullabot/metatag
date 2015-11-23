@@ -26,13 +26,8 @@ function metatag_page_attachments(array &$attachments) {
       if ($metatag_defaults->hasTag($tag_id)) {
         $tag->setValue($metatag_defaults->getTag($tag_id));
         $metatags[$tag_id] = $tag->render();
+        $attachments['#attached']['html_head'][] = [$tag->render(), $tag_id];
       }
-    }
-  }
-
-  if (!empty($metatags)) {
-    foreach ($metatags as $key => $value) {
-      $attachments['#attached']['html_head'][] = [$value, $key];
     }
   }
 }

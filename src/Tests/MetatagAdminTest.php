@@ -18,7 +18,7 @@ class MetatagAdminTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('metatag', 'node', 'datetime', 'comment', 'views', 'block', 'devel');
+  public static $modules = array('metatag', 'node');
 
   /**
    * {@inheritdoc}
@@ -106,7 +106,7 @@ class MetatagAdminTest extends WebTestBase {
    */
   function testEntityOverrides() {
     // Initiate session with a user who can manage metatags.
-    $permissions = array('administer site configuration', 'administer metatags', 'access content', 'create article content', 'administer nodes', 'create article content', 'create page content', 'post comments');
+    $permissions = array('administer site configuration', 'administer metatags', 'access content', 'create article content', 'administer nodes', 'create article content', 'create page content');
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
 

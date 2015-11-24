@@ -32,6 +32,7 @@ use Drupal\metatag\MetatagDefaultsInterface;
  *   links = {
  *     "canonical" = "/admin/structure/metatag_defaults/{metatag_defaults}",
  *     "edit-form" = "/admin/structure/metatag_defaults/{metatag_defaults}/edit",
+ *     "delete-form" = "/admin/structure/metatag_defaults/{metatag_defaults}/delete",
  *     "collection" = "/admin/structure/visibility_group"
  *   }
  * )

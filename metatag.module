@@ -9,10 +9,9 @@
  * Load all meta tags for this page.
  */
 function metatag_page_attachments(array &$attachments) {
-  $metatags = array();
-  $metatag_defaults = entity_load('metatag_defaults', 'global');
+  $metatags = metatag_get_tags_from_route();
 
-  if (!empty($metatag_defaults)) {
+  if (!empty($metatags)) {
     // Load all tag plugins.
     $tag_manager = \Drupal::service('plugin.manager.metatag.tag');
     $tags = $tag_manager->getDefinitions();
@@ -23,8 +22,8 @@ function metatag_page_attachments(array &$attachments) {
     foreach ($tags as $tag_id => $tag_definition) {
       $tag = $tag_manager->createInstance($tag_id);
       // If the config_entity has a value for this tag, set it.
-      if ($metatag_defaults->hasTag($tag_id)) {
-        $tag->setValue($metatag_defaults->getTag($tag_id));
+      if (isset($metatags[$tag_id])) {
+        $tag->setValue($metatags[$tag_id]);
         $metatags[$tag_id] = $tag->render();
         $attachments['#attached']['html_head'][] = [$tag->render(), $tag_id];
       }
@@ -37,11 +36,59 @@ function metatag_page_attachments(array &$attachments) {
  */
 function metatag_preprocess_html(array &$variables) {
   // Alter the page title.
-  $metatag_global = entity_load('metatag_defaults', 'global');
-  if (!empty($metatag_global)) {
-    if ($metatag_global->hasTag('title')) {
-      $processed_title = \Drupal::token()->replace($metatag_global->getTag('title'));
+  $metatags = metatag_get_tags_from_route();
+  if (!empty($metatags)) {
+    if (isset($metatags['title'])) {
+      $processed_title = \Drupal::token()->replace($metatags['title']);
       $variables['head_title'] = array('metatag' => $processed_title);
     }
   }
 }
+
+/**
+ * Load the meta tags by processing the route parameters.
+ *
+ * @return array()
+ *   All of the meta tags identified for the header.
+ */
+function metatag_get_tags_from_route() {
+  $metatags = entity_load('metatag_defaults', 'global');
+
+  // Load the current route.
+  $route_match = \Drupal::routeMatch();
+
+  // Look for a canonical entity view page, e.g. node/{nid}, user/{uid}, etc.
+  $entity_type = metatag_is_supported_route($route_match->getRouteName());
+
+  // Check if there are default metatags for this entity type.
+  if (!empty($entity_type)) {
+    $entity_metatags = entity_load('metatag_defaults', $entity_type);
+    if ($entity_metatags != NULL) {
+      $metatags->set('tags', array_merge($metatags->get('tags'), $entity_metatags->get('tags')));
+    }
+  }
+
+  return $metatags->get('tags');
+}
+
+/**
+ * Identify whether a route is supported by the module.
+ *
+ * @param string $route_name
+ *
+ * @return bool
+ */
+function metatag_is_supported_route($route_name) {
+  $supported = FALSE;
+
+  // Look for a canonical entity view page, e.g. node/{nid}, user/{uid}, etc.
+  $matches = array();
+
+  preg_match('/entity\.(.*)\.canonical/', $route_name, $matches);
+  if (!empty($matches[1])) {
+    $supported = $matches[1];
+  }
+
+  return $supported;
+}
+

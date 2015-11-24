@@ -70,7 +70,6 @@ class MetatagAdminTest extends WebTestBase {
     $this->assertText('Saved the Global Metatag defaults.');
 
     // Check that the new values are found in the response.
-    $this->drupalGet('<front>');
     foreach ($values as $metatag => $value) {
       $this->assertRaw($value, t('Updated metatag @tag was found in the HEAD section of the page.', array('@tag' => $metatag)));
     }

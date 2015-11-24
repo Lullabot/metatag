@@ -1,2 +1,5 @@
 id: 'node'
 label: 'Node'
+tags:
+  title: '[node:title] | [site:name]'
+  description: '[node:summary]'

@@ -140,7 +140,10 @@ class MetatagDefaultsForm extends EntityForm {
     foreach ($entity_types as $entity_type => $entity_label) {
       $bundles = $entity_manager->getBundleInfo($entity_type);
       foreach ($bundles as $bundle_id => $bundle_metadata) {
-        $options[$entity_label][$entity_type . '__' . $bundle_id] = $bundle_metadata['label'];
+        $metatag_defaults_id = $entity_type . '__' . $bundle_id;
+        if (empty(entity_load('metatag_defaults', $metatag_defaults_id))) {
+          $options[$entity_label][$metatag_defaults_id] = $bundle_metadata['label'];
+        }
       }
     }
     return $options;

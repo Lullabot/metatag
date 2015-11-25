@@ -77,7 +77,7 @@ function metatag_get_tags_from_route() {
     }
 
     // Now check if we should apply bundle overrides.
-    $entity_bundle = $entity->getType();
+    $entity_bundle = $entity->bundle();
     $bundle_metatags = entity_load('metatag_defaults', $entity_type . '__' . $entity_bundle);
     if ($bundle_metatags != NULL) {
       // Merge with existing defaults.

@@ -102,9 +102,9 @@ class MetatagAdminTest extends WebTestBase {
 
 
   /**
-   * Tests entity overrides.
+   * Tests entity and bundle overrides.
    */
-  function testEntityOverrides() {
+  function testOverrides() {
     // Initiate session with a user who can manage metatags.
     $permissions = array('administer site configuration', 'administer metatags', 'access content', 'create article content', 'administer nodes', 'create article content', 'create page content');
     $account = $this->drupalCreateUser($permissions);
@@ -161,6 +161,24 @@ class MetatagAdminTest extends WebTestBase {
     $this->drupalGet('node/' . $node->id());
     foreach ($values as $metatag => $value) {
       $this->assertRaw($value, t('Found global @tag tag as Node does not set it.', array('@tag' => $metatag)));
+    }
+
+    // Now create article overrides and then test them.
+    $values = array(
+      'id' => 'node__article',
+      'title' => 'Article title override',
+      'description' => 'Article description override',
+    );
+    $this->drupalPostForm('admin/structure/metatag_defaults/add', $values, 'Save');
+    $this->assertText('Created the Content: Article Metatag defaults.');
+    $node = $this->drupalCreateNode(array(
+      'title' => t('Hello, world!'),
+      'type' => 'article',
+    ));
+    $this->drupalGet('node/' . $node->id());
+    unset($values['id']);
+    foreach ($values as $metatag => $value) {
+      $this->assertRaw($value, t('Found bundle override for tag @tag.', array('@tag' => $metatag)));
     }
   }
 

@@ -81,6 +81,7 @@ class MetatagAdminTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
     $this->assertText('Saved the Global Metatag defaults.');
+    $this->drupalGet('contact');
     foreach ($values as $metatag => $value) {
       $processed_value = \Drupal::token()->replace($value);
       $this->assertRaw($processed_value, t('Processed token for metatag @tag was found in the HEAD section of the page.', array('@tag' => $metatag)));
@@ -121,7 +122,7 @@ class MetatagAdminTest extends WebTestBase {
       'description' => 'Test description for a node.',
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/node', $values, 'Save');
-    $this->assertText('Saved the Node Metatag defaults.');
+    $this->assertText('Saved the Content Metatag defaults.');
 
     // Check that the new values are found in the response.
     $this->drupalGet('node/' . $node->id());
@@ -138,7 +139,7 @@ class MetatagAdminTest extends WebTestBase {
       'description' => '',
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/node', $values, 'Save');
-    $this->assertText('Saved the Node Metatag defaults.');
+    $this->assertText('Saved the Content Metatag defaults.');
     $this->drupalGet('admin/structure/metatag_defaults/node');
 
     // Then, set global ones.

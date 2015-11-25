@@ -129,12 +129,11 @@ abstract class MetaNameBase extends PluginBase {
       $element = '';
     }
     else {
-      $processed_value = \Drupal::token()->replace($this->value);
       $element = array(
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => $this->name,
-          'content' => $processed_value,
+          'content' => $this->value,
         )
       );
     }

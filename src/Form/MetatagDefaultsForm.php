@@ -81,9 +81,18 @@ class MetatagDefaultsForm extends EntityForm {
     $metatag_defaults->set('tags', $tag_values);
     $status = $metatag_defaults->save();
 
-    drupal_set_message($this->t('Saved the %label Metatag defaults.', [
-      '%label' => $metatag_defaults->label(),
-    ]));
+    switch ($status) {
+      case SAVED_NEW:
+        drupal_set_message($this->t('Created the %label Metatag defaults.', [
+          '%label' => $metatag_defaults->label(),
+        ]));
+        break;
+      default:
+        drupal_set_message($this->t('Saved the %label Metatag defaults.', [
+          '%label' => $metatag_defaults->label(),
+        ]));
+    }
+
     $form_state->setRedirectUrl($metatag_defaults->urlInfo('collection'));
   }
 

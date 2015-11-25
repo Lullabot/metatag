@@ -21,13 +21,14 @@ use Drupal\metatag\MetatagDefaultsInterface;
  *     "form" = {
  *       "add" = "Drupal\metatag\Form\MetatagDefaultsForm",
  *       "edit" = "Drupal\metatag\Form\MetatagDefaultsForm",
+ *       "delete" = "Drupal\metatag\Form\MetatagDefaultsDeleteForm"
  *     }
  *   },
  *   config_prefix = "metatag_defaults",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
+ *     "label" = "label"
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/metatag_defaults/{metatag_defaults}",
@@ -38,6 +39,7 @@ use Drupal\metatag\MetatagDefaultsInterface;
  * )
  */
 class MetatagDefaults extends ConfigEntityBase implements MetatagDefaultsInterface {
+
   /**
    * The Metatag defaults ID.
    *
@@ -85,4 +87,5 @@ class MetatagDefaults extends ConfigEntityBase implements MetatagDefaultsInterfa
     }
     return $this->tags[$tag_id];
   }
+
 }

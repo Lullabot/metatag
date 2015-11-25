@@ -81,6 +81,7 @@ class MetatagAdminTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
     $this->assertText('Saved the Global Metatag defaults.');
+    $this->drupalGet('contact');
     foreach ($values as $metatag => $value) {
       $processed_value = \Drupal::token()->replace($value);
       $this->assertRaw($processed_value, t('Processed token for metatag @tag was found in the HEAD section of the page.', array('@tag' => $metatag)));
@@ -101,9 +102,9 @@ class MetatagAdminTest extends WebTestBase {
 
 
   /**
-   * Tests entity overrides.
+   * Tests entity and bundle overrides.
    */
-  function testEntityOverrides() {
+  function testOverrides() {
     // Initiate session with a user who can manage metatags.
     $permissions = array('administer site configuration', 'administer metatags', 'access content', 'create article content', 'administer nodes', 'create article content', 'create page content');
     $account = $this->drupalCreateUser($permissions);
@@ -121,7 +122,7 @@ class MetatagAdminTest extends WebTestBase {
       'description' => 'Test description for a node.',
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/node', $values, 'Save');
-    $this->assertText('Saved the Node Metatag defaults.');
+    $this->assertText('Saved the Content Metatag defaults.');
 
     // Check that the new values are found in the response.
     $this->drupalGet('node/' . $node->id());
@@ -138,7 +139,7 @@ class MetatagAdminTest extends WebTestBase {
       'description' => '',
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/node', $values, 'Save');
-    $this->assertText('Saved the Node Metatag defaults.');
+    $this->assertText('Saved the Content Metatag defaults.');
     $this->drupalGet('admin/structure/metatag_defaults/node');
 
     // Then, set global ones.
@@ -160,6 +161,24 @@ class MetatagAdminTest extends WebTestBase {
     $this->drupalGet('node/' . $node->id());
     foreach ($values as $metatag => $value) {
       $this->assertRaw($value, t('Found global @tag tag as Node does not set it.', array('@tag' => $metatag)));
+    }
+
+    // Now create article overrides and then test them.
+    $values = array(
+      'id' => 'node__article',
+      'title' => 'Article title override',
+      'description' => 'Article description override',
+    );
+    $this->drupalPostForm('admin/structure/metatag_defaults/add', $values, 'Save');
+    $this->assertText('Created the Content: Article Metatag defaults.');
+    $node = $this->drupalCreateNode(array(
+      'title' => t('Hello, world!'),
+      'type' => 'article',
+    ));
+    $this->drupalGet('node/' . $node->id());
+    unset($values['id']);
+    foreach ($values as $metatag => $value) {
+      $this->assertRaw($value, t('Found bundle override for tag @tag.', array('@tag' => $metatag)));
     }
   }
 

@@ -14,6 +14,16 @@ use Drupal\Core\Entity\EntityInterface;
  * Provides a listing of Metatag defaults entities.
  */
 class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function load() {
+    $entities = parent::load();
+    // Move the Global defaults to the top.
+    return array('global' => $entities['global']) + $entities;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -41,12 +51,19 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
   public function getLabelAndConfig(EntityInterface $entity) {
     $output = '<div>';
     $prefix = '';
+    $inherits = '';
     if ($entity->id() != 'global') {
-      $output .= '<div>
-                   <p>Inherits meta tags from: Global</p>
-                 </div>';
       $prefix = '<div class="indentation"></div>';
+      $inherits .= 'Global';
     }
+    if (strpos($entity->id(), '__') !== FALSE) {
+      $prefix .= '<div class="indentation"></div>';
+      list($entity_label, $bundle_label) = explode(': ', $entity->get('label'));
+      $inherits .= ', ' . $entity_label;
+    }
+    $output .= '<div>
+                  <p>Inherits meta tags from: ' . $inherits . '</p>
+                </div>';
     $tags = $entity->get('tags');
     if (count($tags)) {
       $output .= '<table>

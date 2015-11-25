@@ -9,6 +9,16 @@ entity.metatag_defaults.collection:
   options:
     _admin_route: TRUE
 
+entity.metatag_defaults.add_form:
+  path: '/admin/structure/metatag_defaults/add'
+  defaults:
+    _entity_form: 'metatag_defaults.add'
+    _title: 'Add Metatag defaults'
+  requirements:
+    _permission: 'administer metatags'
+  options:
+    _admin_route: TRUE
+
 entity.metatag_defaults.edit_form:
   path: '/admin/structure/metatag_defaults/{metatag_defaults}'
   defaults:

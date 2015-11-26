@@ -23,21 +23,5 @@ use Drupal\metatag\Annotation\MetatagTag;
  * )
  */
 class AbstractTag extends MetaNameBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function form() {
-    $form = array(
-      '#type' => 'textarea',
-      '#title' => $this->label(),
-      '#default_value' => $this->value(),
-      '#required' => FALSE,
-      '#description' => $this->description(),
-      '#element_validate' => array(array(get_class($this), 'validateTag')),
-    );
-
-    return $form;
-  }
-
+  // Nothing here yet. Just a placeholder class for a plugin.
 }

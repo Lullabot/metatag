@@ -47,6 +47,13 @@ abstract class MetaNameBase extends PluginBase {
   protected $description;
 
   /**
+   * The category this meta tag fits in.
+   *
+   * @var string
+   */
+  protected $group;
+
+  /**
    * The value of the metatag in this instance.
    *
    * @var mixed
@@ -65,6 +72,8 @@ abstract class MetaNameBase extends PluginBase {
     $this->name = $plugin_definition['name'];
     $this->label = $plugin_definition['label'];
     $this->description = $plugin_definition['description'];
+    $this->group = $plugin_definition['group'];
+    $this->weight = $plugin_definition['weight'];
   }
 
   public function id() {
@@ -79,17 +88,31 @@ abstract class MetaNameBase extends PluginBase {
   public function name() {
     return $this->name;
   }
+  public function group() {
+    return $this->group;
+  }
+  public function weight() {
+    return $this->weight;
+  }
+
+  /**
+   * @return bool
+   *   Whether this meta tag has been enabled.
+   */
+  public function isActive() {
+    return TRUE;
+  }
 
   /**
    * Generate a form element for this meta tag.
    */
-  public function form() {
+  public function form(array $element = array()) {
     $form = array(
       '#type' => 'textfield',
       '#title' => $this->label(),
       '#default_value' => $this->value(),
       '#maxlength' => 255,
-      '#required' => FALSE,
+      '#required' => isset($element['#required']) ? $element['#required'] : FALSE,
       '#description' => $this->description(),
       '#element_validate' => array(array(get_class($this), 'validateTag')),
     );
@@ -97,33 +120,15 @@ abstract class MetaNameBase extends PluginBase {
     return $form;
   }
 
-  /**
-   * Returns the value for this tag.
-   *
-   * @return
-   *   string the value of this tag.
-   */
   public function value() {
     return $this->value;
   }
 
-  /**
-   * Sets the value of this tag.
-   *
-   * @param string $value
-   *   The value to set to this tag.
-   */
   public function setValue($value) {
     $this->value = $value;
   }
 
-  /**
-   * Renders this tag.
-   *
-   * @return
-   *   The HTML that represents this tag.
-   */
-  public function render() {
+  public function output() {
     if (empty($this->value)) {
       // If there is no value, we don't want a tag output.
       $element = '';
@@ -133,7 +138,7 @@ abstract class MetaNameBase extends PluginBase {
         '#tag' => 'meta',
         '#attributes' => array(
           'name' => $this->name,
-          'content' => $this->value,
+          'content' => $this->value(),
         )
       );
     }

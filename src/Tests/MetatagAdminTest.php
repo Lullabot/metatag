@@ -44,7 +44,7 @@ class MetatagAdminTest extends WebTestBase {
     $metatag_defaults = \Drupal::config('metatag.global');
 
     // Initiate session with a user who can manage metatags.
-    $permissions = array('administer site configuration', 'administer metatags');
+    $permissions = array('administer site configuration', 'administer meta tags');
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
 
@@ -106,7 +106,7 @@ class MetatagAdminTest extends WebTestBase {
    */
   function testOverrides() {
     // Initiate session with a user who can manage metatags.
-    $permissions = array('administer site configuration', 'administer metatags', 'access content', 'create article content', 'administer nodes', 'create article content', 'create page content');
+    $permissions = array('administer site configuration', 'administer meta tags', 'access content', 'create article content', 'administer nodes', 'create article content', 'create page content');
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
 

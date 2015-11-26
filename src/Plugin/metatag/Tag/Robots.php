@@ -11,17 +11,18 @@ use Drupal\metatag\Plugin\metatag\Tag\MetaNameBase;
 use Drupal\metatag\Annotation\MetatagTag;
 
 /**
- * The "Robots" meta tag.
+ * The basic "Robots" meta tag.
  *
  * @MetatagTag(
  *   id = "robots",
  *   label = @Translation("Robots"),
  *   description = @Translation("Provides search engines with specific directions for what to do when this page is indexed."),
  *   name = "robots",
+ *   group = "advanced",
+ *   weight = 1
  * )
  */
 class Robots extends MetaNameBase {
-
   /**
    * Sets the value of this tag.
    *
@@ -41,7 +42,7 @@ class Robots extends MetaNameBase {
   /**
    * {@inheritdoc}
    */
-  public function form() {
+  public function form(array $element = array()) {
     // Prepare the default value as it is stored as a string.
     $default_value = array();
     if (!empty($this->value)) {
@@ -65,32 +66,11 @@ class Robots extends MetaNameBase {
         'notranslate' => t('Prevent search engines from offering to translate this page in search results.'),
       ),
       '#default_value' => $default_value,
-      '#required' => FALSE,
+      '#required' => isset($element['#required']) ? $element['#required'] : FALSE,
       '#element_validate' => array(array(get_class($this), 'validateTag')),
     );
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
-    if (empty($this->value)) {
-      // If there is no value, we don't want a tag output.
-      $element = '';
-    }
-    else {
-      $element = array(
-        '#tag' => 'meta',
-        '#attributes' => array(
-          'name' => $this->name,
-          'content' => $this->value,
-        )
-      );
-    }
-
-    return $element;
   }
 
 }

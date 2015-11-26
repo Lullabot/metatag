@@ -59,35 +59,33 @@ class MetatagAdminTest extends WebTestBase {
     $this->drupalGet('admin/structure/metatag_defaults/global');
     $this->assertFieldById('edit-title', $metatag_defaults->get('title'), t('Metatag defaults were injected into the Global configuration entity.'));
 
-    // Update the Global defaults.
+    // Update the Global defaults and test them.
     $values = array(
       'title' => 'Test title',
       'description' => 'Test description',
-      'abstract' => 'Test abstract',
-      'keywords' => 'Test keywords',
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
     $this->assertText('Saved the Global Metatag defaults.');
-
-    // Check that the new values are found in the response.
+    $this->drupalGet('hit-a-404');
     foreach ($values as $metatag => $value) {
       $this->assertRaw($value, t('Updated metatag @tag was found in the HEAD section of the page.', array('@tag' => $metatag)));
     }
 
-    // Check that tokens are being replaced in the title and in the rest of the fields.
+    // Check that tokens are processed.
     $values = array(
-      'title' => '[current-page:title] | [site:name] | Test title',
-      'description' => '[current-page:title] | [site:name] | Test description',
+      'title' => '[site:name] | Test title',
+      'description' => '[site:name] | Test description',
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
     $this->assertText('Saved the Global Metatag defaults.');
-    $this->drupalGet('contact');
+    drupal_flush_all_caches();
+    $this->drupalGet('hit-a-404');
     foreach ($values as $metatag => $value) {
       $processed_value = \Drupal::token()->replace($value);
       $this->assertRaw($processed_value, t('Processed token for metatag @tag was found in the HEAD section of the page.', array('@tag' => $metatag)));
     }
 
-    // Test Robots plugin.
+    // Test the Robots plugin.
     $robots_values = array('index', 'follow', 'noydir');
     $form_values = array();
     foreach ($robots_values as $value) {
@@ -95,6 +93,8 @@ class MetatagAdminTest extends WebTestBase {
     }
     $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
     $this->assertText('Saved the Global Metatag defaults.');
+    drupal_flush_all_caches();
+    $this->drupalGet('hit-a-404');
     $robots_value = implode(', ', $robots_values);
     $this->assertRaw($robots_value, t('Robots metatag has the expected values.'));
     $this->drupalLogout();
@@ -110,12 +110,6 @@ class MetatagAdminTest extends WebTestBase {
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
 
-    // Create a a test node.
-    $node = $this->drupalCreateNode(array(
-      'title' => t('Hello, world!'),
-      'type' => 'article',
-    ));
-
     // Update the Metatag Node defaults.
     $values = array(
       'title' => 'Test title for a node.',
@@ -123,6 +117,12 @@ class MetatagAdminTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/node', $values, 'Save');
     $this->assertText('Saved the Content Metatag defaults.');
+
+    // Create a test node.
+    $node = $this->drupalCreateNode(array(
+      'title' => t('Hello, world!'),
+      'type' => 'article',
+    ));
 
     // Check that the new values are found in the response.
     $this->drupalGet('node/' . $node->id());
@@ -140,7 +140,6 @@ class MetatagAdminTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/node', $values, 'Save');
     $this->assertText('Saved the Content Metatag defaults.');
-    $this->drupalGet('admin/structure/metatag_defaults/node');
 
     // Then, set global ones.
     $values = array(
@@ -149,11 +148,13 @@ class MetatagAdminTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
     $this->assertText('Saved the Global Metatag defaults.');
-    $this->drupalGet('admin/structure/metatag_defaults/global');
 
     // Next, test that global defaults are rendered since node ones are empty.
     // We are creating a new node as doing a get on the previous one would
     // return cached results.
+    // @TODO  BookTest.php resets the cache of a single node, which is way more
+    // performant than creating a node for every set of assertions.
+    // @see BookTest::testDelete().
     $node = $this->drupalCreateNode(array(
       'title' => t('Hello, world!'),
       'type' => 'article',

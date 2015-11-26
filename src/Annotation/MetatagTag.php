@@ -48,4 +48,18 @@ class MetatagTag extends Plugin {
    */
   public $name;
 
+  /**
+   * The group this meta tag fits in, corresponds to a MetatagGroup plugn.
+   *
+   * @var string
+   */
+  public $group;
+
+  /**
+   * Weight of the tag.
+   *
+   * @var int
+   */
+  public $weight;
+
 }

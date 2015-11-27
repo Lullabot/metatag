@@ -55,6 +55,10 @@ class MetatagAdminTest extends WebTestBase {
     // Check that the Global defaults were created.
     $this->assertLinkByHref('/admin/structure/metatag_defaults/global', 0, t('Global defaults were created on installation.'));
 
+    // Check that Global and entity defaults can't be deleted.
+    $this->assertNoLinkByHref('/admin/structure/metatag_defaults/global/delete', 0, t('Global defaults can\'t be deleted'));
+    $this->assertNoLinkByHref('/admin/structure/metatag_defaults/node/delete', 0, t('Entity defaults can\'t be deleted'));
+
     // Check that the module defaults were injected into the Global config entity.
     $this->drupalGet('admin/structure/metatag_defaults/global');
     $this->assertFieldById('edit-title', $metatag_defaults->get('title'), t('Metatag defaults were injected into the Global configuration entity.'));

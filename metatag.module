@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\metatag\Entity\MetatagDefaults;
 
 /**
  * Implements hook_help().
@@ -24,6 +25,24 @@ tags", about your website and web pages.') . '</p>';
   }
 
   return $output;
+}
+
+/**
+ * Alter entity operations.
+ *
+ * @param array $operations
+ *   Operations array as returned by
+ *   \Drupal\Core\Entity\EntityListBuilderInterface::getOperations().
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity on which the linked operations will be performed.
+ */
+function metatag_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
+  // Remove the Delete operation in global and entity defaults.
+  if ($entity instanceof MetatagDefaults) {
+    if (strpos($entity->id(), '__') === FALSE) {
+      unset($operations['delete']);
+    }
+  }
 }
 
 /**

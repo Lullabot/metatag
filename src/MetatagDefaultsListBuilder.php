@@ -9,6 +9,7 @@ namespace Drupal\metatag;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a listing of Metatag defaults entities.
@@ -38,6 +39,25 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $this->getLabelAndConfig($entity);
     return $row + parent::buildRow($entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
+
+    // Global and entity defaults can be reverted but not deleted.
+    if (strpos($entity->id(), '__') === FALSE) {
+      unset($operations['delete']);
+      $operations['revert'] = array(
+        'title' => t('Revert'),
+        'weight' => $operations['edit']['weight'] + 1,
+        'url' => $entity->urlInfo('revert-form'),
+      );
+    }
+
+    return $operations;
   }
 
   /**

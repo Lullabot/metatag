@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\metatag\Form\MetatagDefaultsDeleteForm.
+ * Contains \Drupal\metatag\Form\MetatagDefaultsRevertForm.
  */
 
 namespace Drupal\metatag\Form;
@@ -12,14 +12,15 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Builds the form to delete Metatag defaults entities.
+ * Builds the form to revert Metatag defaults entities.
  */
-class MetatagDefaultsDeleteForm extends EntityConfirmFormBase {
+class MetatagDefaultsRevertForm extends EntityConfirmFormBase {
+
   /**
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete %name?', array('%name' => $this->entity->label()));
+    return $this->t('Are you sure you want to revert %name to its default values?', array('%name' => $this->entity->label()));
   }
 
   /**
@@ -33,21 +34,21 @@ class MetatagDefaultsDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return $this->t('Delete');
+    return $this->t('Revert');
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->entity->delete();
+    $this->entity->revert();
 
     drupal_set_message(
-      $this->t('Deleted @label defaults.',
+      $this->t('Reverted @label defaults.',
         [
           '@label' => $this->entity->label()
         ]
-        )
+      )
     );
 
     $form_state->setRedirectUrl($this->getCancelUrl());

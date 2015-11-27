@@ -41,7 +41,9 @@ class MetatagAdminTest extends WebTestBase {
    * Tests the interface to manage metatag defaults.
    */
   function testDefaults() {
-    $metatag_defaults = \Drupal::config('metatag.global');
+    // Save the default title to test the Revert operation at the end.
+    $metatag_defaults = \Drupal::config('metatag.metatag_defaults.global');
+    $default_title = $metatag_defaults->get('tags')['title'];
 
     // Initiate session with a user who can manage metatags.
     $permissions = array('administer site configuration', 'administer meta tags');
@@ -101,6 +103,12 @@ class MetatagAdminTest extends WebTestBase {
     $this->drupalGet('hit-a-404');
     $robots_value = implode(', ', $robots_values);
     $this->assertRaw($robots_value, t('Robots metatag has the expected values.'));
+
+    // Test reverting global configuration to its defaults.
+    $this->drupalPostForm('admin/structure/metatag_defaults/global/revert', array(), 'Revert');
+    $this->assertText('Reverted Global defaults.');
+    $this->assertText($default_title, 'Global title was reverted to its default value.');
+
     $this->drupalLogout();
   }
 
@@ -185,6 +193,10 @@ class MetatagAdminTest extends WebTestBase {
     foreach ($values as $metatag => $value) {
       $this->assertRaw($value, t('Found bundle override for tag @tag.', array('@tag' => $metatag)));
     }
+
+    // Test deleting the article defaults.
+    $this->drupalPostForm('admin/structure/metatag_defaults/node__article/delete', array(), 'Delete');
+    $this->assertText('Deleted Content: Article defaults.');
   }
 
 }

@@ -296,10 +296,16 @@ class MetatagManager implements MetatagManagerInterface {
         if ($entity) {
           $token_replacements = array($entity->getEntityTypeId() => $entity);
         }
-        $value = $this->tokenService->tokenReplace($value, $token_replacements);
 
-        // Tell the plugin what value to use for the metatag content.
+        // Set the value as sometimes the data needs massaging, such as when
+        // field defaults are used for the Robots field, which come as an array
+        // that needs to be filtered and converted to a string.
+        // @see @Robots::setValue().
         $tag->setValue($value);
+        $processed_value = $this->tokenService->tokenReplace($tag->value(), $token_replacements);
+
+        // Now store the value with processed tokens back into the plugin.
+        $tag->setValue($processed_value);
 
         // Have the tag generate the output based on the value we gave it.
         $output = $tag->output();

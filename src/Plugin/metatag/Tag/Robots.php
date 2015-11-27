@@ -23,18 +23,20 @@ use Drupal\metatag\Annotation\MetatagTag;
  * )
  */
 class Robots extends MetaNameBase {
+
   /**
    * Sets the value of this tag.
    *
    * @param string|array $value
    *   The value to set to this tag.
-   *   It can be an array if it comes from a form submission, in which case
+   *   It can be an array if it comes from a form submission or from field
+   *   defaults, in which case
    *   we transform it to a comma-separated string.
    */
   public function setValue($value) {
     if (is_array($value)) {
       $value = array_filter($value);
-      $value = implode(', ', $value);
+      $value = implode(', ', array_keys($value));
     }
     $this->value = $value;
   }

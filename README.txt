@@ -18,18 +18,17 @@ Features
 --------------------------------------------------------------------------------
 The primary features include:
 
-* A large volume of meta tags available, covering X basic tags, Y Open Graph
-  tags, Z Twitter Cards tags, Å Dublin Core tags, ∫ Google+ tags, ç App Links
-  tags, ∂ site verification tags.
+* An administration interface to manage default meta tags.
 
 * Use of standard fields for entity support, allowing for meta tag translations
   and revisioning.
 
+* A large volume of meta tags available, covering X basic tags, Y Open Graph
+  tags, Z Twitter Cards tags, Å Dublin Core tags, ∫ Google+ tags, ç App Links
+  tags, ∂ site verification tags.
+
 * A plugin interface allowing for additional meta tags to be easily added via
   custom modules.
-
-* The front page's meta tags can be customized if a node is used for the front
-  page.
 
 * Integration with DrupalConsole [1] to provide a quick method of generating new
   meta tags.
@@ -37,46 +36,25 @@ The primary features include:
 
 Standard usage scenario
 --------------------------------------------------------------------------------
-For any entity / bundle types that require meta tag output:
 
-* Go to the "Manage fields" page for that entity, e.g. for an "Article" content
-  type it would be: admin/structure/types/manage/article/fields
+1. Install the module.
+2. Open admin/structure/metatag_defaults.
+3. Adjust global and entity defaults. Fill in reasonable default values for any
+   of the meta tags that need to be customized. Tokens may be used to
+   automatically assign values. If the Token module is enabled there will be a
+   "Browse available tokens" link that opens a popup to list & insert the
+   available tokens.
+4. If you want to set bundle/conent type overrides, go to the "Manage fields"
+   page for that entity, e.g. for an "Article" content type it would be:
+   admin/structure/types/manage/article/fields.
 
-* Click the "Add field" button.
-
-* If the field was added to this type of entity before, e.g. to another content
-  type:
-
-  * In the "Re-use an existing field" selector, look for an item that starts
-    with "Meta tags", e.g. "Meta tags: field_meta_tags".
-
-  * Fill in a label for the field, e.g. "Meta tags"; the machine name cannot be
-    changed.
-
-* If the field was not added to this type of entity before:
-
-  * Select "Meta tags" from the "Add a new field" selector.
-
-  * Fill in a label for the field, e.g. "Meta tags", and ensure a the field's
-    machine name is appropriate, e.g. "meta_tags".
-
-* Click the "Save and continue" button.
-
-* Note, that on the "Field settings" tab it won't be possible to change the
-  "Allowed number of values", it's limited to only one item.
-
-* Fill in an appropriate "Help text" that would be useful for the site's
-  content creators & maintainers.
-
-* If the site supports multiple languages, and translations have been enabled
-  for this entity, select "Users may translate this field" to use Drupal's
-  translation system.
-
-* Fill in reasonable default values for any of the meta tags that need to be
-  customized. Tokens may be used to automatically assign values; if the Token
-  module is enabled there will be a "Browse available tokens" link that opens
-  a popup to list & insert the available tokens.
-
+  4.1 Select "Meta tags" from the "Add a new field" selector.
+  4.2 Fill in a label for the field, e.g. "Meta tags", and set an appropiate
+      machine name, e.g. "meta_tags".
+  4.3 Click the "Save and continue" button.
+  4.5 If the site supports multiple languages, and translations have been
+      enabled for this entity, select "Users may translate this field" to use
+      Drupal's translation system.
 
 DrupalConsole integration
 --------------------------------------------------------------------------------

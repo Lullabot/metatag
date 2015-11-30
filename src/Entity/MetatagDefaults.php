@@ -27,7 +27,7 @@ use Drupal\metatag\MetatagDefaultsInterface;
  *     }
  *   },
  *   config_prefix = "metatag_defaults",
- *   admin_permission = "administer site configuration",
+ *   admin_permission = "administer meta tags",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"

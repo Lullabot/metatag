@@ -64,11 +64,9 @@ class MetatagManager implements MetatagManagerInterface {
       // Get the tags from this field.
       $field_tags = $this->getFieldTags($entity, $field_name);
 
-      // Go through all the available tags. If the field has a value set for it,
+      // If the field has a value set for it,
       // use that. Otherwise, use the value from the default settings.
-      foreach ($field_default_tags as $key => $value) {
-        $tags[$key] = isset($field_tags[$key]) ? $field_tags[$key] : $field_default_tags[$key];
-      }
+      $tags = array_merge($field_default_tags, $field_tags);
     }
 
     return $tags;

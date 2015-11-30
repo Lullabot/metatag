@@ -183,32 +183,36 @@ function metatag_preprocess_html(&$variables) {
 function metatag_get_tags_from_route() {
   $metatag_manager = \Drupal::service('metatag.manager');
 
+  // First, get defaults.
+  $metatags = metatag_get_default_tags();
+
+  // Then, set tag overrides for this particular entity.
+  $entity = metatag_get_route_entity();
+  if (!empty($entity)) {
+    $metatags = array_merge($metatags, $metatag_manager->tagsFromEntity($entity));
+  }
+
+  return $metatag_manager->generateElements($metatags, $entity);
+}
+
+/**
+ * Returns default tags for the current route.
+ *
+ * @return array
+ *   List of tags.
+ */
+function metatag_get_default_tags() {
   // First we load global defaults.
   $metatags = entity_load('metatag_defaults', 'global');
 
   // Check if we should apply entity overrides.
   $entity = metatag_get_route_entity();
   if (!empty($entity)) {
-    $entity_type = $entity->getEntityTypeId();
-    $entity_metatags = entity_load('metatag_defaults', $entity_type);
+    $entity_metatags = entity_load('metatag_defaults', $entity->getEntityTypeId());
     if ($entity_metatags != NULL) {
       // Merge with global defaults.
       $metatags->set('tags', array_merge($metatags->get('tags'), $entity_metatags->get('tags')));
-      // Prepare token replacements array.
-      $token_replacements = array($entity_type => $entity);
     }
-
-    // Now check if we should apply bundle overrides.
-    $entity_bundle = $entity->bundle();
-    $bundle_metatags = entity_load('metatag_defaults', $entity_type . '__' . $entity_bundle);
-    if ($bundle_metatags != NULL) {
-      // Merge with existing defaults.
-      $metatags->set('tags', array_merge($metatags->get('tags'), $bundle_metatags->get('tags')));
-    }
-
-    // Finally, set tag overrides for this particular entity.
-    $metatags->set('tags', array_merge($metatags->get('tags'), $metatag_manager->tagsFromEntity($entity)));
   }
-
-  return $metatag_manager->generateElements($metatags->get('tags'), $entity);
+  return $metatags->get('tags');
 }

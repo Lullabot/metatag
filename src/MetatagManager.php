@@ -181,8 +181,8 @@ class MetatagManager implements MetatagManagerInterface {
       '#type' => 'details',
     );
 
-    // Add the token browser.
-    $element['token_tree'] = $this->tokenService->tokenBrowser();
+    $element += $this->tokenService->tokenBrowser();
+
     $groups_and_tags = $this->sortedGroupsWithTags();
 
     $first = TRUE;

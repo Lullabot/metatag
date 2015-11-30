@@ -78,6 +78,9 @@ class MetatagFieldItem extends FieldItemBase {
     $field_default_tags_value =  $this->getFieldDefaults();
     $field_default_tags = unserialize($field_default_tags_value[0]['value']);
 
+    // Merge field defaults on top of global ones.
+    $default_tags = array_merge(metatag_get_default_tags(), $field_default_tags);
+
     // Get the value about to be saved.
     $current_value = $this->value;
     $current_tags = unserialize($current_value);
@@ -86,7 +89,7 @@ class MetatagFieldItem extends FieldItemBase {
     // @TODO: When site defaults are added, account for those.
     $tags_to_save = array();
     foreach ($current_tags as $tag_id => $tag_value) {
-      if ($tag_value != $field_default_tags[$tag_id]) {
+      if (!isset($default_tags[$tag_id]) || ($tag_value != $default_tags[$tag_id])) {
         $tags_to_save[$tag_id] = $tag_value;
       }
     }

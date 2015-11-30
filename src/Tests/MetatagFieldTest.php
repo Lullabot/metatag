@@ -57,12 +57,6 @@ class MetatagFieldTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser($this->permissions);
-  }
-
-  /**
-   * Tests adding and editing values using metatag.
-   */
-  public function testMetatag() {
     $this->drupalLogin($this->adminUser);
     // Add a new metatag field.
     $this->drupalGet('entity_test/structure/entity_test/fields/add-field');
@@ -72,17 +66,17 @@ class MetatagFieldTest extends WebTestBase {
       'new_storage_type' => 'metatag',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save and continue'));
-    // Cardinality should not be editable.
-    $elements = $this->cssSelect('select[name=cardinality]');
-    $element = reset($elements);
-    $this->assertTrue(count($elements) === 1, 'Found cardinality field');
-    $this->assertEqual($element['disabled'], 'disabled', 'Cardinality is disabled');
     $this->drupalPostForm(NULL, [], t('Save field settings'));
+  }
 
+  /**
+   * Tests adding and editing values using metatag.
+   */
+  public function testMetatag() {
     $edit = [
       'default_value_input[field_metatag][0][basic][keywords]' => 'Purple monkey dishwasher',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm('entity_test/structure/entity_test/fields/entity_test.entity_test.field_metatag', $edit, t('Save settings'));
     $this->assertRaw(t('Saved %name configuration', ['%name' => 'Metatag']));
     $this->container->get('entity.manager')->clearCachedFieldDefinitions();
 
@@ -111,6 +105,32 @@ class MetatagFieldTest extends WebTestBase {
 
     // Verify that the URLs aren't being broken.
     $this->doTestUrlMetatags();
+  }
+
+  /**
+   * Tests inheritance in default metatags.
+   *
+   * When the bundle does not define a default value, global or entity defaults
+   * are used instead.
+   */
+  protected function testDefaultInheritance() {
+    // First we set global defaults.
+    $global_values = array(
+      'description' => 'Global description',
+    );
+    $this->drupalPostForm('admin/structure/metatag_defaults/global', $global_values, 'Save');
+    $this->assertText('Saved the Global Metatag defaults.');
+
+    // Then we remove field defaults.
+    $field_values = array(
+      'default_value_input[field_metatag][0][basic][description]' => '',
+    );
+    $this->drupalPostForm('entity_test/structure/entity_test/fields/entity_test.entity_test.field_metatag', $field_values, t('Save settings'));
+    $this->assertText('Saved Metatag configuration.');
+
+    // Now when we create an entity, global defaults are used to fill the form fields.
+    $this->drupalGet('entity_test/add');
+    $this->assertFieldByName('field_metatag[0][basic][description]', $global_values['description'], t('Description field has the global default as the field default does not define it.'));
   }
 
   /**

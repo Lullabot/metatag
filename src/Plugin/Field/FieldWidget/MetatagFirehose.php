@@ -59,6 +59,7 @@ class MetatagFirehose extends WidgetBase implements ContainerFactoryPluginInterf
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $item = $items[$delta];
+    $global_default_tags = metatag_get_default_tags();
 
     // Retrieve the values for each metatag from the serialized array.
     $values = array();
@@ -66,16 +67,22 @@ class MetatagFirehose extends WidgetBase implements ContainerFactoryPluginInterf
       $values = unserialize($item->value);
     }
     if (!empty($element['#field_parents']) && reset($element['#field_parents']) === 'default_value_input') {
-      // We are on the default-values form, there won't be any default values
-      // if the field has just been added - so we can return the form without
-      // processing default values.
+      // We are in the default values form for the Metatag field.
+      // Let's merge field defaults on top of global ones.
+      $values = array_merge($global_default_tags, $values);
       return $this->metatagManager->form($values, $element);
     }
 
-    // Fill in the default values for any tags that don't have stored values.
+    // We are editing an entity. Let's merge field defaults on top of
+    // global ones and then populate fields which have not been
+    // overridden in the entity.
+    $default_tags = $global_default_tags;
     $field_default_tags_value = $this->fieldDefinition->getDefaultValueLiteral();
-    $field_default_tags = unserialize($field_default_tags_value[0]['value']);
-    foreach ($field_default_tags as $tag_id => $tag_value) {
+    if (isset($field_default_tags_value[0]['value'])) {
+      $field_default_tags = unserialize($field_default_tags_value[0]['value']);
+      $default_tags = array_merge($default_tags, $field_default_tags);
+    }
+    foreach ($default_tags as $tag_id => $tag_value) {
       if (!isset($values[$tag_id]) && !empty($tag_value)) {
         $values[$tag_id] = $tag_value;
       }
@@ -93,13 +100,19 @@ class MetatagFirehose extends WidgetBase implements ContainerFactoryPluginInterf
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     // Flatten the values array to remove the groups and then serialize all the
     // metatags into one value for storage.
+    $tag_manager = \Drupal::service('plugin.manager.metatag.tag');
+    $tags = $tag_manager->getDefinitions();
     foreach ($values as &$value) {
       $flattened_value = array();
       foreach ($value as $group) {
         // Exclude the "original delta" value.
         if (is_array($group)) {
-          foreach ($group as $tag_id => $tag) {
-            $flattened_value[$tag_id] = $tag;
+          foreach ($group as $tag_id => $tag_value) {
+            $tag = $tag_manager->createInstance($tag_id);
+            $tag->setValue($tag_value);
+            if (!empty($tag->value())) {
+              $flattened_value[$tag_id] = $tag->value();
+            }
           }
         }
       }

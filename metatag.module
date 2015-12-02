@@ -205,7 +205,21 @@ function metatag_get_default_tags() {
   // First we load global defaults.
   $metatags = entity_load('metatag_defaults', 'global');
 
-  // Check if we should apply entity overrides.
+  // Then, we check if this is a special page.
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    $special_metatags = entity_load('metatag_defaults', 'front');
+  }
+  elseif(\Drupal::service('current_route_match')->getRouteName() == 'system.403') {
+    $special_metatags = entity_load('metatag_defaults', '403');
+  }
+  elseif(\Drupal::service('current_route_match')->getRouteName() == 'system.404') {
+    $special_metatags = entity_load('metatag_defaults', '404');
+  }
+  if (isset($special_metatags)) {
+    $metatags->set('tags', array_merge($metatags->get('tags'), $special_metatags->get('tags')));
+  }
+
+  // Now check if we should apply entity overrides.
   $entity = metatag_get_route_entity();
   if (!empty($entity)) {
     $entity_metatags = entity_load('metatag_defaults', $entity->getEntityTypeId());

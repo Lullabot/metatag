@@ -3,7 +3,7 @@ entity.metatag_defaults.collection:
   path: '/admin/structure/metatag_defaults'
   defaults:
     _entity_list: 'metatag_defaults'
-    _title: 'Metatag defaults'
+    _title: 'Metatag'
   requirements:
     _permission: 'administer meta tags'
   options:

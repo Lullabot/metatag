@@ -18,13 +18,16 @@ class MetatagAdminTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('metatag', 'node');
+  public static $modules = array('metatag', 'node', 'test_page_test');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    // Use the test page as the front page.
+    $this->config('system.site')->set('page.front', '/test-page')->save();
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {
@@ -108,6 +111,45 @@ class MetatagAdminTest extends WebTestBase {
     $this->drupalLogout();
   }
 
+  /**
+   * Tests special pages.
+   */
+  function testSpecialPages() {
+    // Initiate session with a user who can manage metatags.
+    $permissions = array('administer site configuration', 'administer meta tags');
+    $account = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($account);
+
+    // Adjust the front page and test it.
+    $values = array(
+      'description' => 'Front page description',
+    );
+    $this->drupalPostForm('admin/structure/metatag_defaults/front', $values, 'Save');
+    $this->assertText('Saved the Front page Metatag defaults.');
+    $this->drupalGet('<front>');
+    $this->assertRaw($values['description'], t('Front page defaults are used at the front page.'));
+
+    // Adjust the 403 page and test it.
+    $values = array(
+      'description' => '403 page description.',
+    );
+    $this->drupalPostForm('admin/structure/metatag_defaults/403', $values, 'Save');
+    $this->assertText('Saved the 403 access denied Metatag defaults.');
+    $this->drupalLogout();
+    $this->drupalGet('admin/structure/metatag_defaults');
+    $this->assertRaw($values['description'], t('403 page defaults are used at 403 pages.'));
+
+    // Adjust the 404 page and test it.
+    $this->drupalLogin($account);
+    $values = array(
+      'description' => '404 page description.',
+    );
+    $this->drupalPostForm('admin/structure/metatag_defaults/404', $values, 'Save');
+    $this->assertText('Saved the 404 page not found Metatag defaults.');
+    $this->drupalGet('foo');
+    $this->assertRaw($values['description'], t('404 page defaults are used at 404 pages.'));
+    $this->drupalLogout();
+  }
 
   /**
    * Tests entity and bundle overrides.

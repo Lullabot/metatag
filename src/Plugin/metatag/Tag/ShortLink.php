@@ -19,7 +19,9 @@ use Drupal\metatag\Annotation\MetatagTag;
  *   description = @Translation("A brief URL, often created by a URL shortening service."),
  *   name = "shortlink",
  *   group = "advanced",
- *   weight = 1
+ *   weight = 1,
+ *   image = FALSE,
+ *   multiple = FALSE
  * )
  */
 class ShortLink extends LinkRelBase {

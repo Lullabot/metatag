@@ -44,17 +44,20 @@ Standard usage scenario
    automatically assign values. If the Token module is enabled there will be a
    "Browse available tokens" link that opens a popup to list & insert the
    available tokens.
-4. If you want to set bundle/conent type overrides, go to the "Manage fields"
-   page for that entity, e.g. for an "Article" content type it would be:
-   admin/structure/types/manage/article/fields.
+4. You can add bundle defaults by clicking on "Add metatag defaults" and filling
+   out the form.
+5. If you want to adjust metatags for a specific entity, then you need to add
+   the Metatag field. Follow these steps:
 
-  4.1 Select "Meta tags" from the "Add a new field" selector.
-  4.2 Fill in a label for the field, e.g. "Meta tags", and set an appropiate
-      machine name, e.g. "meta_tags".
-  4.3 Click the "Save and continue" button.
-  4.5 If the site supports multiple languages, and translations have been
-      enabled for this entity, select "Users may translate this field" to use
-      Drupal's translation system.
+   5.1 Go to the "Manage fields" of the bundle where you want the metatag field
+       to appear.
+   5.2 Select "Meta tags" from the "Add a new field" selector.
+   5.3 Fill in a label for the field, e.g. "Meta tags", and set an appropiate
+       machine name, e.g. "meta_tags".
+   5.4 Click the "Save and continue" button.
+   5.5 If the site supports multiple languages, and translations have been
+       enabled for this entity, select "Users may translate this field" to use
+       Drupal's translation system.
 
 DrupalConsole integration
 --------------------------------------------------------------------------------

@@ -32,13 +32,22 @@ tags", about your website and web pages.') . '</p>';
  */
 function metatag_form_field_storage_config_edit_form_alter(&$form, FormStateInterface $form_state) {
   if ($form_state->getFormObject()->getEntity()->getType() == 'metatag') {
-    // Disable the cardinality option on the field storage settings form for
-    // metatag fields.
-    $form['cardinality_container']['#prefix'] = t("Metatag fields must be singular.");
+    // Hide the cardinality field.
+    $form['cardinality_container']['#access'] = FALSE;
     $form['cardinality_container']['#disabled'] = TRUE;
-    $form['cardinality_container']['cardinality']['#disabled'] = TRUE;
-    $form['cardinality_container']['cardinality_number']['#disabled'] = TRUE;
-    unset($form['cardinality_container']['cardinality_number']['#states']);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'field_config_edit_form'.
+ */
+function metatag_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
+  if ($form_state->getFormObject()->getEntity()->getType() == 'metatag') {
+    // Hide the cardinality field.
+    $form['required']['#access'] = FALSE;
+    $form['required']['#disabled'] = TRUE;
+    $form['default_value']['#access'] = FALSE;
+    $form['default_value']['#disabled'] = TRUE;
   }
 }
 
@@ -226,6 +235,13 @@ function metatag_get_default_tags() {
     if ($entity_metatags != NULL) {
       // Merge with global defaults.
       $metatags->set('tags', array_merge($metatags->get('tags'), $entity_metatags->get('tags')));
+    }
+
+    // Finally, check if we should apply bundle overrides.
+    $bundle_metatags = entity_load('metatag_defaults', $entity->getEntityTypeId() . '__' . $entity->bundle());
+    if ($bundle_metatags != NULL) {
+      // Merge with existing defaults.
+      $metatags->set('tags', array_merge($metatags->get('tags'), $bundle_metatags->get('tags')));
     }
   }
   return $metatags->get('tags');

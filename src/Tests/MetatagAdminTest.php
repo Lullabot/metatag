@@ -60,6 +60,10 @@ class MetatagAdminTest extends WebTestBase {
     // Check that the Global defaults were created.
     $this->assertLinkByHref('/admin/structure/metatag_defaults/global', 0, t('Global defaults were created on installation.'));
 
+    // Check that Global and entity defaults can't be deleted.
+    $this->assertNoLinkByHref('/admin/structure/metatag_defaults/global/delete', 0, t('Global defaults can\'t be deleted'));
+    $this->assertNoLinkByHref('/admin/structure/metatag_defaults/node/delete', 0, t('Entity defaults can\'t be deleted'));
+
     // Check that the module defaults were injected into the Global config entity.
     $this->drupalGet('admin/structure/metatag_defaults/global');
     $this->assertFieldById('edit-title', $metatag_defaults->get('title'), t('Metatag defaults were injected into the Global configuration entity.'));
@@ -199,6 +203,9 @@ class MetatagAdminTest extends WebTestBase {
     $this->drupalPostForm('admin/structure/metatag_defaults/global', $values, 'Save');
     $this->assertText('Saved the Global Metatag defaults.');
 
+    // Next, test that global defaults are rendered since node ones are empty.
+    // We are creating a new node as doing a get on the previous one would
+    // return cached results.
     // @TODO  BookTest.php resets the cache of a single node, which is way more
     // performant than creating a node for every set of assertions.
     // @see BookTest::testDelete().
@@ -210,6 +217,28 @@ class MetatagAdminTest extends WebTestBase {
     foreach ($values as $metatag => $value) {
       $this->assertRaw($value, t('Found global @tag tag as Node does not set it.', array('@tag' => $metatag)));
     }
+
+    // Now create article overrides and then test them.
+    $values = array(
+      'id' => 'node__article',
+      'title' => 'Article title override',
+      'description' => 'Article description override',
+    );
+    $this->drupalPostForm('admin/structure/metatag_defaults/add', $values, 'Save');
+    $this->assertText('Created the Content: Article Metatag defaults.');
+    $node = $this->drupalCreateNode(array(
+      'title' => t('Hello, world!'),
+      'type' => 'article',
+    ));
+    $this->drupalGet('node/' . $node->id());
+    unset($values['id']);
+    foreach ($values as $metatag => $value) {
+      $this->assertRaw($value, t('Found bundle override for tag @tag.', array('@tag' => $metatag)));
+    }
+
+    // Test deleting the article defaults.
+    $this->drupalPostForm('admin/structure/metatag_defaults/node__article/delete', array(), 'Delete');
+    $this->assertText('Deleted Content: Article defaults.');
   }
 
 }

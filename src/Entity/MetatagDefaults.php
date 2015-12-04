@@ -22,7 +22,9 @@ use Drupal\metatag\MetatagDefaultsInterface;
  *   handlers = {
  *     "list_builder" = "Drupal\metatag\MetatagDefaultsListBuilder",
  *     "form" = {
+ *       "add" = "Drupal\metatag\Form\MetatagDefaultsForm",
  *       "edit" = "Drupal\metatag\Form\MetatagDefaultsForm",
+ *       "delete" = "Drupal\metatag\Form\MetatagDefaultsDeleteForm",
  *       "revert" = "Drupal\metatag\Form\MetatagDefaultsRevertForm"
  *     }
  *   },
@@ -35,6 +37,7 @@ use Drupal\metatag\MetatagDefaultsInterface;
  *   links = {
  *     "canonical" = "/admin/structure/metatag_defaults/{metatag_defaults}",
  *     "edit-form" = "/admin/structure/metatag_defaults/{metatag_defaults}/edit",
+ *     "delete-form" = "/admin/structure/metatag_defaults/{metatag_defaults}/delete",
  *     "revert-form" = "/admin/structure/metatag_defaults/{metatag_defaults}/revert",
  *     "collection" = "/admin/structure/visibility_group"
  *   }

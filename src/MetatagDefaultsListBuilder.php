@@ -47,17 +47,21 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
 
-    $operations['revert'] = array(
-      'title' => t('Revert'),
-      'weight' => $operations['edit']['weight'] + 1,
-      'url' => $entity->urlInfo('revert-form'),
-    );
+    // Global and entity defaults can be reverted but not deleted.
+    if (strpos($entity->id(), '__') === FALSE) {
+      unset($operations['delete']);
+      $operations['revert'] = array(
+        'title' => t('Revert'),
+        'weight' => $operations['edit']['weight'] + 1,
+        'url' => $entity->urlInfo('revert-form'),
+      );
+    }
 
     return $operations;
   }
 
   /**
-   * Renders the entity label plus a summary.
+   * Renders the Metatag defaults lable plus its configuration.
    *
    * @param EntityInterface $entity
    *   The Metatag defaults entity.
@@ -68,10 +72,14 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
     $output = '<div>';
     $prefix = '';
     $inherits = '';
-    // Add indentation to entities different than the global defaults.
     if ($entity->id() != 'global') {
       $prefix = '<div class="indentation"></div>';
       $inherits .= 'Global';
+    }
+    if (strpos($entity->id(), '__') !== FALSE) {
+      $prefix .= '<div class="indentation"></div>';
+      list($entity_label, $bundle_label) = explode(': ', $entity->get('label'));
+      $inherits .= ', ' . $entity_label;
     }
     $output .= '<div>
                   <p>Inherits meta tags from: ' . $inherits . '</p>
@@ -100,4 +108,13 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function render() {
+    $build['header'] = array(
+      '#markup' => '<p>' . t("To view a summary of the default meta tags and the inheritance, click on a meta tag type. If you need to set metatags for a specific entity, edit it's bundle and add the Metatag field.") . '</p>',
+    );
+    return $build + parent::render();
+  }
 }

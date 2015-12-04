@@ -6,6 +6,13 @@
  */
 
 /**
+ * Implements hook_install().
+ */
+function metatag_install() {
+  drupal_set_message(t("To adjust global defaults, go to admin/structure/metatag_defaults. If you need to set metatags for a specific entity, edit it's bundle and add the Metatag field."));
+}
+
+/**
  * Remove tags in field storage that match default or are empty.
  */
 function metatag_update_8101() {

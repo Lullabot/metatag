@@ -24,9 +24,10 @@ class MetatagDefaultsForm extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-
     $metatag_defaults = $this->entity;
+    $metatag_manager = \Drupal::service('metatag.manager');
 
+    // Add the token browser at the top.
     $form += \Drupal::service('metatag.token')->tokenBrowser();
 
     // If this is a new Metatag defaults, then list available bundles.
@@ -39,19 +40,14 @@ class MetatagDefaultsForm extends EntityForm {
         '#options' => $options,
         '#required' => TRUE,
       );
+      $values = array();
+    }
+    else {
+      $values = $metatag_defaults->get('tags');
     }
 
-    // Load all tag plugins and render their form representation.
-    $tag_manager = \Drupal::service('plugin.manager.metatag.tag');
-    $tags = $tag_manager->getDefinitions();
-    foreach ($tags as $tag_id => $tag_definition) {
-      $tag = $tag_manager->createInstance($tag_id);
-      // If the config_entity has a value for this tag, set it.
-      if ($metatag_defaults->hasTag($tag_id)) {
-        $tag->setValue($metatag_defaults->getTag($tag_id));
-      }
-      $form[$tag_id] = $tag->form();
-    }
+    // Add metatag form fields.
+    $form = $metatag_manager->form($values, $form);
 
     return $form;
   }

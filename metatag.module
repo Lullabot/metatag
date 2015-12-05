@@ -43,7 +43,7 @@ function metatag_form_field_storage_config_edit_form_alter(&$form, FormStateInte
  */
 function metatag_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
   if ($form_state->getFormObject()->getEntity()->getType() == 'metatag') {
-    // Hide the cardinality field.
+    // Hide the required and default value fields.
     $form['required']['#access'] = FALSE;
     $form['required']['#disabled'] = TRUE;
     $form['default_value']['#access'] = FALSE;

@@ -62,24 +62,13 @@ class MetatagFieldItem extends FieldItemBase {
   }
 
   /**
-   * Returns the default settings on the field.
-   */
-  public function getFieldDefaults() {
-    return $this->getFieldDefinition()->getDefaultValueLiteral();
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function preSave() {
     parent::preSave();
 
-    // Get the field's default values.
-    $field_default_tags_value =  $this->getFieldDefaults();
-    $field_default_tags = unserialize($field_default_tags_value[0]['value']);
-
     // Merge field defaults on top of global ones.
-    $default_tags = array_merge(metatag_get_default_tags(), $field_default_tags);
+    $default_tags = metatag_get_default_tags();
 
     // Get the value about to be saved.
     $current_value = $this->value;

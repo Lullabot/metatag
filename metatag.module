@@ -66,6 +66,9 @@ function metatag_page_attachments(array &$attachments) {
   if (is_null($metatag_attachments)) {
     // Load the meta tags from the route.
     $metatag_attachments = metatag_get_tags_from_route();
+    if (!$metatag_attachments) {
+      return;
+    }
 
     // If any Metatag items were found, append them.
     if (!empty($metatag_attachments['#attached']['html_head'])) {
@@ -89,6 +92,12 @@ function metatag_page_attachments(array &$attachments) {
  *   TRUE if the current route is supported.
  */
 function metatag_is_current_route_supported() {
+  // If upgrading, we need to wait for database updates to complete.
+  $is_ready = \Drupal::service('entity_type.manager')->getDefinition('metatag_defaults', FALSE);
+  if (!$is_ready) {
+    return FALSE;
+  }
+
   // Ignore admin paths.
   $route = \Drupal::routeMatch()->getRouteObject();
   $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
@@ -130,6 +139,10 @@ function metatag_preprocess_html(&$variables) {
   $attachments = drupal_static('metatag_attachments');
   if (is_null($attachments)) {
     $attachments = metatag_get_tags_from_route();
+  }
+
+  if (!$attachments) {
+    return;
   }
 
   // Load the page title.
@@ -186,14 +199,17 @@ function metatag_preprocess_html(&$variables) {
 /**
  * Load the meta tags by processing the route parameters.
  *
- * @return array()
- *   All of the meta tags identified for the header.
+ * @return mixed
+ *   Array of metatags or NULL.
  */
 function metatag_get_tags_from_route() {
   $metatag_manager = \Drupal::service('metatag.manager');
 
   // First, get defaults.
   $metatags = metatag_get_default_tags();
+  if (!$metatags) {
+    return;
+  }
 
   // Then, set tag overrides for this particular entity.
   $entity = metatag_get_route_entity();
@@ -207,12 +223,15 @@ function metatag_get_tags_from_route() {
 /**
  * Returns default tags for the current route.
  *
- * @return array
- *   List of tags.
+ * @return mixed
+ *   Array of tags or NULL;
  */
 function metatag_get_default_tags() {
   // First we load global defaults.
   $metatags = entity_load('metatag_defaults', 'global');
+  if (!$metatags) {
+    return;
+  }
 
   // Then, we check if this is a special page.
   if (\Drupal::service('path.matcher')->isFrontPage()) {

@@ -58,14 +58,17 @@ class MetatagFieldTest extends WebTestBase {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser($this->permissions);
     $this->drupalLogin($this->adminUser);
-    // Add a new metatag field.
+
+    // Add a metatag field to the entity type test_entity.
+    $this->drupalGet('entity_test/structure/entity_test/fields/add-field');
     $edit = [
       'label' => 'Metatag',
       'field_name' => 'metatag',
       'new_storage_type' => 'metatag',
     ];
-    $this->drupalPostForm('entity_test/structure/entity_test/fields/add-field', $edit, t('Save and continue'));
+    $this->drupalPostForm(NULL, $edit, t('Save and continue'));
     $this->drupalPostForm(NULL, [], t('Save field settings'));
+    $this->container->get('entity.manager')->clearCachedFieldDefinitions();
   }
 
   /**
@@ -120,7 +123,7 @@ class MetatagFieldTest extends WebTestBase {
    * When the bundle does not define a default value, global or entity defaults
    * are used instead.
    */
-  protected function testDefaultInheritance() {
+  public function testDefaultInheritance() {
     // First we set global defaults.
     $global_values = array(
       'description' => 'Global description',

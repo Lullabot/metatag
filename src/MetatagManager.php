@@ -57,16 +57,8 @@ class MetatagManager implements MetatagManagerInterface {
 
     /* @var FieldConfig $field_info */
     foreach ($fields as $field_name => $field_info) {
-      // Get the tags from the field's defaults.
-      $field_default_tags_value = $field_info->getDefaultValueLiteral();
-      $field_default_tags = unserialize($field_default_tags_value[0]['value']);
-
       // Get the tags from this field.
-      $field_tags = $this->getFieldTags($entity, $field_name);
-
-      // If the field has a value set for it,
-      // use that. Otherwise, use the value from the default settings.
-      $tags = array_merge($field_default_tags, $field_tags);
+      $tags = $this->getFieldTags($entity, $field_name);
     }
 
     return $tags;
@@ -272,10 +264,12 @@ class MetatagManager implements MetatagManagerInterface {
    * Generate the elements that go in the attached array in
    * hook_page_attachments.
    *
-   * @param $tags
-   * @param $entity
-   *
+   * @param array $tags
+   *   The array of tags as plugin_id => value.
+   * @param object $entity
+   *   Optional entity object to use for token replacements.
    * @return array
+   *   Render array with tag elements.
    */
   public function generateElements($tags, $entity = NULL) {
     $metatag_tags = $this->tagPluginManager->getDefinitions();
